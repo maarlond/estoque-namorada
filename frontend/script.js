@@ -1,4 +1,26 @@
 const API_URL = "http://localhost:3000/produtos";
+let produtoEditando = null;
+const token = localStorage.getItem("token");
+
+// Validar token
+if (!token) {
+    window.location.href = "login.html";
+}
+
+// Função para buscar o token e validar depois
+function getHeaders() {
+    
+    return {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+    };
+
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
 
 // 🔹 Buscar produtos
 /*async function carregarProdutos() {
@@ -31,7 +53,12 @@ const API_URL = "http://localhost:3000/produtos";
 }*/
 
 async function carregarProdutos() {
-    const resposta = await fetch("http://localhost:3000/produtos");
+
+    //const resposta = await fetch("http://localhost:3000/produtos");
+    const resposta = await fetch(API_URL, {
+        headers: getHeaders()
+    });
+
     const produtos = await resposta.json();
 
     const lista = document.getElementById("listaProdutos");
@@ -67,8 +94,7 @@ async function carregarProdutos() {
     });
 }
 
-let produtoEditando = null;
-
+// Editar produto
 async function editarProduto(produto) {
     document.getElementById("nome").value = produto.nome;
     document.getElementById("codigo").value = produto.codigo;
@@ -77,11 +103,11 @@ async function editarProduto(produto) {
     document.getElementById("preco_custo").value = produto.preco_custo;
     document.getElementById("preco_venda").value = produto.preco_venda;
 
-    // subir até o formulário
+    // Subir até o formulário de edição
     document.getElementById("formProduto").scrollIntoView({
         behavior: "smooth"
     });
-    
+
     produtoEditando = produto.id;
 }
 
@@ -128,9 +154,7 @@ async function adicionarProduto() {
             // EDITAR
             await fetch(`${API_URL}/${produtoEditando}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: getHeaders(),
                 body: JSON.stringify({
                     nome,
                     codigo,
@@ -153,9 +177,7 @@ async function adicionarProduto() {
 
             await fetch("http://localhost:3000/produtos", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: getHeaders(),
                 body: JSON.stringify({
                     nome,
                     codigo,
@@ -209,7 +231,8 @@ async function removerProduto(id) {
     if (resultado.isConfirmed) {
 
         await fetch(`${API_URL}/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: getHeaders()
         });
 
         Swal.fire(

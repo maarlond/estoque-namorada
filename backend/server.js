@@ -3,13 +3,17 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const path = require("path");
 
+// Criação de rota para login
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const SECRET = "segredo_super";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// SERVIR FRONTEND
-app.use(express.static(path.join(__dirname, "../frontend")));
+// SERVER FRONTEND
+//app.use(express.static(path.join(__dirname, "../frontend")));
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -23,8 +27,11 @@ db.connect(err => {
     console.log("Banco conectado!");
 });
 
+// Proteger rota de produtos
+const verificarToken = require("./middleware/auth");
+
 // Listar produtos
-app.get("/produtos", (req, res) => {
+app.get("/produtos", verificarToken, (req, res) => {
     db.query("SELECT * FROM produtos", (err, result) => {
         if (err) return res.status(500).json(err);
         res.json(result);
@@ -32,7 +39,7 @@ app.get("/produtos", (req, res) => {
 });
 
 // Adicionar produto
-app.post("/produtos", (req, res) => {
+app.post("/produtos", verificarToken, (req, res) => {
     const { nome, codigo, marca, quantidade, preco_custo, preco_venda } = req.body;
 
     db.query(
@@ -84,6 +91,43 @@ app.delete("/produtos/:id", (req, res) => {
     );
 });
 
+// Rota para login
+app.post("/login", (req, res) => {
+
+    const { email, senha } = req.body;
+
+    const sql = "SELECT * FROM usuarios WHERE email = ?";
+
+    db.query(sql, [email], async (err, result) => {
+
+        if (err) return res.status(500).json(err);
+
+        if (result.length === 0) {
+            return res.status(401).json({ erro: "Usuário não encontrado" });
+        }
+
+        const usuario = result[0];
+
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+        if (!senhaValida) {
+            return res.status(401).json({ erro: "Senha inválida" });
+        }
+
+        const token = jwt.sign(
+            { id: usuario.id },
+            SECRET,
+            { expiresIn: "8h" }
+        );
+
+        res.json({ token });
+
+    });
+
+});
+
+
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });
+
