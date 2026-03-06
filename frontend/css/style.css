@@ -1,10 +1,16 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
-    background: #f8f8f8;
+    background: #000000;
 }
 
 h1 {
+    color: white;
+    text-align: center;
+}
+
+h2 {
+    color: white;
     text-align: center;
 }
 
@@ -14,7 +20,9 @@ h1 {
     margin-bottom: 20px;
 }
 
-input, select, button {
+input,
+select,
+button {
     padding: 8px;
 }
 
@@ -29,25 +37,147 @@ button:hover {
     background: #c2185b;
 }
 
+/* Estilo moderno da tabela */
 table {
     width: 100%;
-    background: white;
     border-collapse: collapse;
+    min-width: 800px;
+    /* força scroll horizontal se a tela for menor */
+    background-color: #1e1e2f;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+thead {
+    background-color: #2c2c44;
+}
+
+/* Centralizar conteúdo da tabela */
+th,
+td {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    /* centraliza horizontalmente */
+    vertical-align: middle;
+    /* centraliza verticalmente */
+    border-bottom: 1px solid #444;
+}
+
+/* Opcional: manter título das colunas com negrito e centralizado */
+th {
+    font-weight: 600;
     text-align: center;
 }
 
- .header h1 {
-        margin: 0;
-        font-size: 1.8rem;
-    }
+tr:hover {
+    background-color: #33335a;
+}
 
-    #btnLogout {
-        display: flex;
-       margin-left: auto; 
-        /* Alinha o conteúdo à direita */
-    }
+/* Botões dentro da tabela */
+td button {
+    padding: 0.3rem 0.6rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+td button:hover {
+    opacity: 0.8;
+}
+
+/* Diferenciar os tipos de botões */
+td button:nth-child(1) {
+    /* Remover */
+    background-color: #d33;
+    color: #fff;
+}
+
+td button:nth-child(2) {
+    /* Editar */
+    background-color: #3085d6;
+    color: #fff;
+}
+
+#tabelaProdutos {
+    color: white;
+}
+
+/* Cabeçalho */
+#tabelaProdutos thead th {
+    color: white;
+    text-align: center;
+    /* já centraliza os títulos */
+}
+
+/* Corpo da tabela */
+#tabelaProdutos tbody td {
+    color: white;
+    text-align: center;
+    /* centraliza os dados */
+}
+
+/* Rodapé (footer) */
+#tabelaProdutos tfoot td {
+    color: white;
+    text-align: center;
+}
+
+/* Caso queira alterar os filtros e paginação do DataTables */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: white;
+    background-color: #222;
+    /* fundo escuro nos inputs e botões */
+}
+
+/* Texto do DataTables em branco (inputs, botões e labels) */
+.dataTables_wrapper {
+    color: white;
+    /* texto geral */
+}
+
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_info {
+    color: white;
+    /* "Pesquisar:" e "Mostrar X registros" */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: white !important;
+    /* botões da paginação */
+    background-color: #222 !important;
+    /* fundo escuro */
+    border: 1px solid #555;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    color: white;
+    background-color: #222;
+    border: 1px solid #555;
+}
+
+/* Centraliza todo o texto do cabeçalho da tabela */
+#tabelaProdutos thead th {
+    text-align: center;
+}
+
+/* Opcional: centraliza também o corpo da tabela */
+#tabelaProdutos tbody td {
+    text-align: center;
+}
+
+/* Footer centralizado */
+#tabelaProdutos tfoot td {
+    text-align: center;
+}
+
+/* Caso queira só centralizar o texto de Totais, mantendo as outras colunas alinhadas à direita/esquerda */
+#tabelaProdutos tfoot td[colspan] {
+    text-align: right;
+    /* mantém "Totais:" à direita */
+}

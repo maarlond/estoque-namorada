@@ -5,18 +5,22 @@
     <meta charset="UTF-8">
     <title>Controle de Estoque 💄</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
-
     <!-- Header com título e botão de logout -->
     <header class="header">
-        <button id="btnLogout">Sair</button>
+        <button id="btnLogout" onclick="logout()">Sair</button>
+
+        <h1>Controle de Estoque <img src="https://img.icons8.com/?size=100&id=nNQ7qwnf9bqt&format=png&color=000000"
+                alt="" style="height: 2em; vertical-align: text-bottom;"></h1>
     </header>
 
-    <h1>Controle de Estoque 💄</h1>
     <!-- Formulário de produto -->
-    <div id="formProduto" class="form-container">
+    <div id=" formProduto" class="form-container">
         <input type="text" id="nome" placeholder="Nome do Produto">
         <input type="text" id="codigo" placeholder="Código do Produto">
 
@@ -29,27 +33,36 @@
         <input type="number" id="preco_custo" placeholder="Preço de Custo" step="0.01">
         <input type="number" id="preco_venda" placeholder="Preço de Venda" step="0.01">
 
-        <button onclick="adicionarProduto()">Adicionar</button>
+        <button id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
 
     <!-- Tabela de produtos -->
     <h2>Produtos em Estoque</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Código</th>
-                <th>Marca</th>
-                <th>Quantidade</th>
-                <th>Preço Custo</th>
-                <th>Preço Venda</th>
-                <th>Valor Total em Estoque</th>
-                <th>Valor Total de lucro</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody id="listaProdutos"></tbody>
-    </table>
+    <div class="table-container">
+        <table id="tabelaProdutos" class="display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Código</th>
+                    <th>Marca</th>
+                    <th>Quantidade</th>
+                    <th>Preço Custo</th>
+                    <th>Preço Venda</th>
+                    <th>Valor Total em Estoque</th>
+                    <th>Valor Total de lucro</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="6" style="font-weight: bold;">Totais:</td>
+                    <td style="text-align: center;" id="totalEstoque"></td>
+                    <td style="text-align: center;" id="totalLucro"></td>
+                </tr>
+            </tfoot>
+            <tbody id="listaProdutos"></tbody>
+        </table>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/script.js"></script>

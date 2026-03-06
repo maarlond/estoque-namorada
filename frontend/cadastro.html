@@ -1,3 +1,33 @@
+<!--<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>Cadastro de Usuário</h1>
+
+    <div class="form-container">
+        <input type="text" id="nome" placeholder="Nome completo">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="senha" placeholder="Senha">
+        <input type="password" id="confirmaSenha" placeholder="Confirme a senha">
+
+        <button type="button" onclick="cadastrarUsuario()">Cadastrar</button>
+    </div>
+
+    <p style="text-align:center; margin-top: 15px;">
+        Já tem uma conta? <a href="login.html" style="color:#6C63FF; font-weight:500;">Login</a>
+    </p>
+    <script src="js/cadastro.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>-->
+
 <section class="vh-100">
 
     <head>
@@ -78,34 +108,59 @@
                 <div id="textoExemplo" class="exemplo-texto"></div>
             </div>
 
+
+
+            <!-- <input type="text" id="nome" placeholder="Nome completo">
+            <input type="email" id="" placeholder="Email">
+            <input type="password" id="senha" placeholder="Senha">
+            <input type="password" id="confirmaSenha" placeholder="Confirme a senha">-->
+
+
+
+
+
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form>
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                        <p class="text-white lead fw-normal mb-0 me-3">Logar-se</p>
+                        <p class="text-white lead fw-normal mb-0 me-3">Cadastrar-se</p>
+                    </div>
+
+                    <!-- Nome input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <input type="text" id="nome" class="text-white form-control form-control-lg"
+                            placeholder="Insira seu nome completo" />
+                        <label class="text-white form-label">Nome completo</label>
                     </div>
 
                     <!-- Email input -->
-                    <div data-mdb-input-init class="form-outline mb-4">
+                    <div data-mdb-input-init class="form-outline mb-3">
                         <input type="email" id="email" class="text-white form-control form-control-lg"
-                            placeholder="Insira um endereço de e-mail válido" />
-                        <label class="text-white form-label">Email</label>
+                            placeholder="Insira um e-mail válido" />
+                        <label class="text-white form-label">E-mail</label>
                     </div>
 
-                    <!-- Password input -->
+                    <!-- Senha input -->
                     <div data-mdb-input-init class="form-outline mb-3">
                         <input type="password" id="senha" class="text-white form-control form-control-lg"
                             placeholder="Insira sua senha" />
                         <label class="text-white form-label">Senha</label>
                     </div>
 
+                    <!-- Confirmar senha input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <input type="password" id="confirmaSenha" class="text-white form-control form-control-lg"
+                            placeholder="Confirme a sua senha" />
+                        <label class="text-white form-label">Confirmar senha</label>
+                    </div>
+
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
                             style="padding-left: 2.5rem; background-color: #d292ff; padding-right: 2.5rem;"
-                            onclick="login()">Login</button>
+                            onclick="cadastrarUsuario()">Cadastrar</button>
 
                         <p onclick="window.location.href='cadastro.html'"
-                            class="text-white small fw-bold mt-2 pt-1 mb-0">Não possui uma conta? <a href="#!"
-                                class="link-danger" onclick="cadastrarUsuario()">Cadastrar</a></p>
+                            class="text-white small fw-bold mt-2 pt-1 mb-0">Já possui uma conta? <a href="login.html"
+                                class="link-danger">Login</a></p>
                     </div>
 
                 </form>
@@ -122,6 +177,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/script.js"></script>
-    <script src="js/login.js"></script>
     <script src="js/cadastro.js"></script>
 </section>

@@ -1,113 +1,218 @@
+// ------------------------------
+// PRODUTOS
+// ------------------------------
 const API_URL = "http://localhost:3000/produtos";
 let produtoEditando = null;
-const token = localStorage.getItem("token");
 
-// Validar token
-if (!token) {
+// ------------------------------
+// TOKEN PARA REQUISIÇÕES
+// ------------------------------
+const token = localStorage.getItem("token");
+const pathAtual = window.location.pathname;
+const btnLogout = document.getElementById("btnLogout");
+
+if (!token && pathAtual !== "/login.html" && pathAtual !== "/cadastro.html") {
     window.location.href = "login.html";
 }
+// ------------------------------
+// LOGIN / LOGOUT
+// ------------------------------
+if (btnLogout) {
+    btnLogout.addEventListener("click", logout);
+}
 
-// Função para buscar o token e validar depois
+async function logout() {
+    const resultado = await Swal.fire({
+        title: "Tem certeza?",
+        text: "Deseja sair do sistema?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, sair",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6"
+    });
+
+    if (resultado.isConfirmed) {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+}
+
 function getHeaders() {
-
     return {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
     };
-
 }
 
-document.getElementById("btnLogout").addEventListener("click", logout);
+// --- TEXTO EXEMPLO DINÂMICO ---
+const div = document.getElementById("textoExemplo");
+const typingContainer = document.getElementById("typingContainer");
 
-function logout() {
-    Swal.fire({
-        icon: "success",
-        title: "Você saiu!",
-        timer: 1000,
-        showConfirmButton: false,
-        didClose: () => {
-            localStorage.removeItem("token");
-            window.location.href = "login.html";
+if (div) {
+
+    const frases = [
+        "Desperte sua essência — o perfume certo transforma qualquer momento em uma lembrança inesquecível.",
+        "Perfume é mais que aroma, é identidade. Encontre o seu e marque presença por onde passar.",
+        "Cada fragrância conta uma história — qual será a sua?"
+    ];
+    let fraseIndex = 0;
+
+    function digitar(frase, callback) {
+        let i = 0;
+        div.innerHTML = "";
+
+        function passo() {
+            if (i < frase.length) {
+                div.innerHTML += frase[i] === "\n" ? "<br>" : frase[i];
+                i++;
+                setTimeout(passo, 50);
+            } else {
+                setTimeout(callback, 1500);
+            }
         }
-    });
-    //localStorage.removeItem("token");
-    //window.location.href = "login.html";
+
+        passo();
+    }
+
+    function proximaFrase() {
+        digitar(frases[fraseIndex], () => {
+            fraseIndex = (fraseIndex + 1) % frases.length;
+            proximaFrase();
+        });
+    }
+    proximaFrase();
 }
 
-// 🔹 Buscar produtos
 /*async function carregarProdutos() {
-    const resposta = await fetch("http://localhost:3000/produtos");
-    const produtos = await resposta.json();
+    try {
+        const resposta = await fetch(API_URL, { headers: getHeaders() });
+        if (!resposta.ok) throw new Error("Erro ao buscar produtos");
 
-    const lista = document.getElementById("listaProdutos");
-    lista.innerHTML = "";
+        const produtos = await resposta.json();
+        const lista = document.getElementById("listaProdutos");
+        lista.innerHTML = "";
 
-    produtos.forEach(produto => {
+        let totalEstoqueSoma = 0;
+        let totalLucroSoma = 0;
 
-        const totalEstoque = produto.quantidade * produto.preco_venda;
+        produtos.forEach(produto => {
+            const precoCusto = Number(produto.preco_custo) || 0;
+            const precoVenda = Number(produto.preco_venda) || 0;
+            const quantidade = Number(produto.quantidade) || 0;
 
-        lista.innerHTML += `
-            <tr>
-                <td>${produto.nome}</td>
-                <td>${produto.marca}</td>
-                <td>${produto.quantidade}</td>
-                <td>R$ ${produto.preco_custo.toFixed(2)}</td>
-                <td>R$ ${produto.preco_venda.toFixed(2)}</td>
-                <td>R$ ${totalEstoque.toFixed(2)}</td>
-                <td>
-                    <button onclick="removerProduto(${produto.id})">
-                        Remover
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
+            const totalEstoque = produto.quantidade * precoVenda;
+            const totalLucro = (precoVenda - precoCusto) * quantidade;
+
+
+            totalEstoqueSoma += totalEstoque;
+            totalLucroSoma += totalLucro;
+
+            lista.innerHTML += `
+                <tr>
+                    <td>${produto.nome}</td>
+                    <td>${produto.codigo ?? ""}</td>
+                    <td>${produto.marca}</td>
+                    <td>${quantidade}</td>
+                    <td>R$ ${precoCusto.toFixed(2)}</td>
+                    <td>R$ ${precoVenda.toFixed(2)}</td>
+                    <td>R$ ${totalEstoque.toFixed(2)}</td>
+                    <td>R$ ${totalLucro.toFixed(2)}</td>
+                    <td>
+                        <button onclick="removerProduto(${produto.id})">Remover</button>
+                        <button onclick='editarProduto(${JSON.stringify(produto)})'>Editar</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        // Atualiza o tfoot diretamente
+        document.getElementById("totalEstoque").innerText = `R$ ${totalEstoqueSoma.toFixed(2)}`;
+        document.getElementById("totalLucro").innerText = `R$ ${totalLucroSoma.toFixed(2)}`;
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar produtos.");
+    }
+
+    // Atualiza os totais no <tfoot>
+    // document.getElementById("totalEstoque").innerText = `R$ ${somaEstoque.toFixed(2)}`;
+    // document.getElementById("totalLucro").innerText = `R$ ${somaLucro.toFixed(2)}`;
 }*/
 
+
+// ------------------------------
+// DATATABLE
+// ------------------------------
+let tabela;
+$(document).ready(function () {
+    tabela = $('#tabelaProdutos').DataTable({
+        pageLength: 20,
+        responsive: true,
+        columnDefs: [
+            { orderable: false, targets: 8 } // botão ação não é ordenável
+        ],
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+        }
+    });
+
+    carregarProdutos();
+});
+
+// ------------------------------
+// CARREGAR PRODUTOS
+// ------------------------------
 async function carregarProdutos() {
+    try {
+        const resposta = await fetch(API_URL, { headers: getHeaders() });
+        if (!resposta.ok) throw new Error("Erro ao buscar produtos");
+        const produtos = await resposta.json();
 
-    //const resposta = await fetch("http://localhost:3000/produtos");
-    const resposta = await fetch(API_URL, {
-        headers: getHeaders()
-    });
+        tabela.clear();
 
-    const produtos = await resposta.json();
+        let totalEstoque = 0;
+        let totalLucro = 0;
 
-    const lista = document.getElementById("listaProdutos");
-    lista.innerHTML = "";
+        produtos.forEach(produto => {
+            const precoCusto = Number(produto.preco_custo);
+            const precoVenda = Number(produto.preco_venda);
+            const estoque = produto.quantidade * precoVenda;
+            const lucro = (precoVenda - precoCusto) * produto.quantidade;
 
-    produtos.forEach(produto => {
+            totalEstoque += estoque;
+            totalLucro += lucro;
 
-        const precoCusto = Number(produto.preco_custo);
-        const precoVenda = Number(produto.preco_venda);
-        const totalEstoque = produto.quantidade * precoVenda;
-        const totalLucro = (precoVenda - precoCusto) * produto.quantidade
+            tabela.row.add([
+                produto.nome,
+                produto.codigo ?? "",
+                produto.marca,
+                produto.quantidade,
+                `R$ ${precoCusto.toFixed(2)}`,
+                `R$ ${precoVenda.toFixed(2)}`,
+                `R$ ${estoque.toFixed(2)}`,
+                `R$ ${lucro.toFixed(2)}`,
+                `<button class="btnEditar" onclick='editarProduto(${JSON.stringify(produto)})'>Editar</button>
+                 <button class="btnRemover" onclick='removerProduto(${produto.id})'>Remover</button>`
+            ]);
+        });
 
-        lista.innerHTML += `
-            <tr>
-                <td>${produto.nome}</td>
-                <td>${produto.codigo ?? ""}</td>
-                <td>${produto.marca}</td>
-                <td>${produto.quantidade}</td>
-                <td>R$ ${precoCusto.toFixed(2)}</td>
-                <td>R$ ${precoVenda.toFixed(2)}</td>
-                <td>R$ ${totalEstoque.toFixed(2)}</td>
-                <td>R$ ${totalLucro.toFixed(2)}</td>
-                <td>
-                    <button onclick="removerProduto(${produto.id})">
-                        Remover
-                    </button>
-                    <button onclick='editarProduto(${JSON.stringify(produto)})'>
-                        Editar
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
+        tabela.draw();
+
+        // Atualizar footer
+        document.getElementById("totalEstoque").textContent = `R$ ${totalEstoque.toFixed(2)}`;
+        document.getElementById("totalLucro").textContent = `R$ ${totalLucro.toFixed(2)}`;
+
+    } catch (err) {
+        console.error(err);
+        Swal.fire("Erro", "Não foi possível carregar os produtos.", "error");
+    }
 }
 
-// Editar produto
 async function editarProduto(produto) {
+
+    const form = document.getElementById("formProduto");
+    if (!form) return; // sai da função se não tiver formulário
     document.getElementById("nome").value = produto.nome;
     document.getElementById("codigo").value = produto.codigo;
     document.getElementById("marca").value = produto.marca;
@@ -115,15 +220,13 @@ async function editarProduto(produto) {
     document.getElementById("preco_custo").value = produto.preco_custo;
     document.getElementById("preco_venda").value = produto.preco_venda;
 
-    // Subir até o formulário de edição
-    document.getElementById("formProduto").scrollIntoView({
-        behavior: "smooth"
-    });
+    // Muda o texto do botão para "Editar"
+    document.getElementById("btnAdicionar").innerText = "Salvar";
 
+    form.scrollIntoView({ behavior: "smooth" });
     produtoEditando = produto.id;
 }
 
-// 🔹 Adicionar produto
 async function adicionarProduto() {
     const nome = document.getElementById("nome").value;
     const codigo = document.getElementById("codigo").value;
@@ -132,14 +235,22 @@ async function adicionarProduto() {
     const preco_custo = parseFloat(document.getElementById("preco_custo").value);
     const preco_venda = parseFloat(document.getElementById("preco_venda").value);
 
-    if (!nome || !quantidade || !preco_custo || !preco_venda) {
-        //alert("Preencha todos os campos!");
+    // Validação manual
+    const erros = [];
+    if (!nome) erros.push("Nome do produto é obrigatório");
+    if (!codigo) erros.push("Código é obrigatório");
+    if (!marca) erros.push("Marca é obrigatória");
+    if (!quantidade || quantidade <= 0) erros.push("Quantidade inválida");
+    if (!preco_custo || preco_custo < 0) erros.push("Preço de custo inválido");
+    if (!preco_venda || preco_venda < 0) erros.push("Preço de venda inválido");
+
+    if (erros.length > 0) {
         Swal.fire({
             icon: "warning",
-            title: "Campos obrigatórios",
-            text: "Preencha todos os campos antes de continuar."
+            title: "Favor, preencher os campos informados",
+            html: erros.map(e => `<div style="color: red;">• ${e}</div>`).join("")
         });
-        return;
+        return; // sai da função se tiver erro
     }
 
     Swal.fire({
@@ -209,7 +320,9 @@ async function adicionarProduto() {
         }
         limparFormulario();
         carregarProdutos();
-    } catch {
+    } catch (err) {
+        console.error(err); // importante para ver o que deu errado
+        Swal.close();
         Swal.fire({
             icon: "error",
             title: "Erro",
@@ -219,15 +332,7 @@ async function adicionarProduto() {
     }
 }
 
-
-// 🔹 Remover
 async function removerProduto(id) {
-
-    /*const confirmar = confirm("Tem certeza que deseja remover este produto?");
- 
-    if (!confirmar) {
-        return; // cancela se clicar em Cancelar
-    }*/
 
     const resultado = await Swal.fire({
         title: "Tem certeza?",
@@ -265,4 +370,6 @@ function limparFormulario() {
     document.getElementById("preco_venda").value = "";
 }
 
-carregarProdutos();
+if (document.getElementById("listaProdutos")) {
+    carregarProdutos();
+}
