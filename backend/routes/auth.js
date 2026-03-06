@@ -56,5 +56,25 @@ router.post("/login", (req, res) => {
 });
 
 
+// --- Cadastro ---
+router.post("/usuarios", async (req, res) => {
+    const { nome, email, senha } = req.body;
+
+    const sqlVerifica = "SELECT * FROM usuarios WHERE email = ?";
+
+    db.query(sqlVerifica, [email], async (err, result) => {
+
+        if (err) return res.status(500).json({ mensagem: "Erro no banco" });
+        if (result.length > 0) return res.status(400).json({ mensagem: "E-mail já cadastrado" });
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+        const sqlInserir = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+        db.query(sqlInserir, [nome, email, senhaHash], (err) => {
+            if (err) return res.status(500).json({ mensagem: "Erro ao cadastrar" });
+            res.status(201).json({ mensagem: "Usuário cadastrado com sucesso" });
+        });
+    });
+});
+
 // exportar rotas
 module.exports = router;

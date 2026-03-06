@@ -138,6 +138,11 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
+
+const path = require("path");
+// SERVER FRONTEND
+app.use(express.static(path.join(__dirname, "../frontend")));
+
 const authRouter = require("./routes/auth"); // caminho para o auth.js
 const produtosRouter = require("./routes/produtos");
 
