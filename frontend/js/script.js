@@ -85,62 +85,6 @@ if (div) {
     proximaFrase();
 }
 
-/*async function carregarProdutos() {
-    try {
-        const resposta = await fetch(API_URL, { headers: getHeaders() });
-        if (!resposta.ok) throw new Error("Erro ao buscar produtos");
-
-        const produtos = await resposta.json();
-        const lista = document.getElementById("listaProdutos");
-        lista.innerHTML = "";
-
-        let totalEstoqueSoma = 0;
-        let totalLucroSoma = 0;
-
-        produtos.forEach(produto => {
-            const precoCusto = Number(produto.preco_custo) || 0;
-            const precoVenda = Number(produto.preco_venda) || 0;
-            const quantidade = Number(produto.quantidade) || 0;
-
-            const totalEstoque = produto.quantidade * precoVenda;
-            const totalLucro = (precoVenda - precoCusto) * quantidade;
-
-
-            totalEstoqueSoma += totalEstoque;
-            totalLucroSoma += totalLucro;
-
-            lista.innerHTML += `
-                <tr>
-                    <td>${produto.nome}</td>
-                    <td>${produto.codigo ?? ""}</td>
-                    <td>${produto.marca}</td>
-                    <td>${quantidade}</td>
-                    <td>R$ ${precoCusto.toFixed(2)}</td>
-                    <td>R$ ${precoVenda.toFixed(2)}</td>
-                    <td>R$ ${totalEstoque.toFixed(2)}</td>
-                    <td>R$ ${totalLucro.toFixed(2)}</td>
-                    <td>
-                        <button onclick="removerProduto(${produto.id})">Remover</button>
-                        <button onclick='editarProduto(${JSON.stringify(produto)})'>Editar</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        // Atualiza o tfoot diretamente
-        document.getElementById("totalEstoque").innerText = `R$ ${totalEstoqueSoma.toFixed(2)}`;
-        document.getElementById("totalLucro").innerText = `R$ ${totalLucroSoma.toFixed(2)}`;
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao carregar produtos.");
-    }
-
-    // Atualiza os totais no <tfoot>
-    // document.getElementById("totalEstoque").innerText = `R$ ${somaEstoque.toFixed(2)}`;
-    // document.getElementById("totalLucro").innerText = `R$ ${somaLucro.toFixed(2)}`;
-}*/
-
-
 // ------------------------------
 // DATATABLE
 // ------------------------------
@@ -211,8 +155,6 @@ async function carregarProdutos() {
 
 async function editarProduto(produto) {
 
-    const form = document.getElementById("formProduto");
-    if (!form) return; // sai da função se não tiver formulário
     document.getElementById("nome").value = produto.nome;
     document.getElementById("codigo").value = produto.codigo;
     document.getElementById("marca").value = produto.marca;
@@ -220,10 +162,15 @@ async function editarProduto(produto) {
     document.getElementById("preco_custo").value = produto.preco_custo;
     document.getElementById("preco_venda").value = produto.preco_venda;
 
-    // Muda o texto do botão para "Editar"
-    document.getElementById("btnAdicionar").innerText = "Salvar";
+    // Muda o texto do botão
+    const botao = document.getElementById("btnAdicionar");
+    botao.textContent = "Editar";
 
-    form.scrollIntoView({ behavior: "smooth" });
+    // Scroll até o formulário
+    document.getElementById("formProduto")?.scrollIntoView({
+        behavior: "smooth"
+    });
+
     produtoEditando = produto.id;
 }
 
@@ -368,6 +315,10 @@ function limparFormulario() {
     document.getElementById("quantidade").value = "";
     document.getElementById("preco_custo").value = "";
     document.getElementById("preco_venda").value = "";
+
+    produtoEditando = null;
+
+    document.getElementById("btnAdicionar").textContent = "Adicionar";
 }
 
 if (document.getElementById("listaProdutos")) {

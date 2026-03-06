@@ -43,7 +43,8 @@ node server.js
 
 
 ## Melhorias futuras
-- Sistema de login
+- Sistema de login (Ok)
+- Tela de cadastro (Ok)
 - Edição de produtos (Ok)
 - Controle de vendas
 - Dashboard com relatórios
