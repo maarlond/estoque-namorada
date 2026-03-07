@@ -1,7 +1,7 @@
 // Pega os elementos do formulário
 //const btnCadastrar = document.getElementById("btnCadastrar");
 
-const API_URL = "https://estoque-namorada.onrender.com";
+//const API_URL = "https://estoque-namorada.onrender.com";
 
 // ===============================
 // Funções de validação

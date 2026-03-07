@@ -2,7 +2,7 @@
 // PRODUTOS
 // ------------------------------
 //const API_URL = "http://localhost:3000/produtos";
-const API_URL = "https://estoque-namorada.onrender.com";
+//const API_URL = "https://estoque-namorada.onrender.com";
 let produtoEditando = null;
 
 // ------------------------------
