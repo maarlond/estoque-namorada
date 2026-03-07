@@ -120,7 +120,7 @@ $(document).ready(function () {
 // ------------------------------
 async function carregarProdutos() {
     try {
-        const resposta = await fetch(API_URL, { headers: getHeaders() });
+        const resposta = await fetch(`${API_URL}/produtos`, { headers: getHeaders() });
         if (!resposta.ok) throw new Error("Erro ao buscar produtos");
         const produtos = await resposta.json();
 
