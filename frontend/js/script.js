@@ -362,7 +362,7 @@ async function removerProduto(id) {
 
     if (resultado.isConfirmed) {
 
-        await fetch(`${API_URL}/${id}`, {
+        await fetch(`${API_URL}/produtos/${id}`, {
             method: "DELETE",
             headers: getHeaders()
         });
