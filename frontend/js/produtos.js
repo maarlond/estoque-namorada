@@ -1,11 +1,8 @@
 // ------------------------------
 // PRODUTOS
 // ------------------------------
-const API_URL = window.location.origin;
+//const API_URL = window.location.origin;
 let produtoEditando = null;
-
-
-
 
 function getHeaders() {
     return {
@@ -18,11 +15,12 @@ function getHeaders() {
 // DATATABLE
 // ------------------------------
 let tabela;
-function iniciarTabelaProdutos(){
+function iniciarTabelaProdutos() {
 
     tabela = $('#tabelaProdutos').DataTable({
         pageLength: 10,
         responsive: true,
+        autoWidth: false,
         columnDefs: [
             { orderable: false, targets: 8 }
         ],
@@ -84,27 +82,6 @@ async function carregarProdutos() {
     }
 }
 
-async function editarProduto(produto) {
-
-    document.getElementById("nome").value = produto.nome;
-    document.getElementById("codigo").value = produto.codigo;
-    document.getElementById("marca").value = produto.marca;
-    document.getElementById("quantidade").value = produto.quantidade;
-    document.getElementById("preco_custo").value = produto.preco_custo;
-    document.getElementById("preco_venda").value = produto.preco_venda;
-
-    // Muda o texto do botão
-    const botao = document.getElementById("btnAdicionar");
-    botao.textContent = "Editar";
-
-    // Scroll até o formulário
-    document.getElementById("formProduto")?.scrollIntoView({
-        behavior: "smooth"
-    });
-
-    produtoEditando = produto.id;
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formProduto");
     if (form) {
@@ -125,7 +102,7 @@ async function adicionarProduto() {
     const quantidade = parseInt(document.getElementById("quantidade").value);
     const preco_custo = parseFloat(document.getElementById("preco_custo").value);
     const preco_venda = parseFloat(document.getElementById("preco_venda").value);
-    
+
     // Validação manual
     const erros = [];
     if (!nome) erros.push("Nome do produto é obrigatório");
@@ -166,7 +143,7 @@ async function adicionarProduto() {
             });
 
             // EDITAR
-            await fetch(`${API_URL}/${produtoEditando}`, {
+            await fetch(`${API_URL}/produtos/${produtoEditando}`, {
                 method: "PUT",
                 headers: getHeaders(),
                 body: JSON.stringify({
@@ -265,6 +242,32 @@ function limparFormulario() {
     document.getElementById("btnAdicionar").textContent = "Adicionar";
 }
 
-if (document.getElementById("listaProdutos")) {
-    carregarProdutos();
+/*document.addEventListener("DOMContentLoaded", () => {
+    console.log("Página carregou");
+    iniciarTabelaProdutos();
+});*/
+
+function abrirModalProduto() {
+    document.getElementById("formProduto").reset();
+    document.getElementById("modalProduto").style.display = "flex";
+}
+
+function fecharModalProduto() {
+    document.getElementById("modalProduto").style.display = "none";
+}
+
+function editarProduto(produto) {
+
+    document.getElementById("nome").value = produto.nome;
+    document.getElementById("codigo").value = produto.codigo;
+    document.getElementById("marca").value = produto.marca;
+    document.getElementById("quantidade").value = produto.quantidade;
+    document.getElementById("preco_custo").value = produto.preco_custo;
+    document.getElementById("preco_venda").value = produto.preco_venda;
+
+    produtoEditando = produto.id;
+
+
+    document.getElementById("modalProduto").style.display = "flex";
+
 }

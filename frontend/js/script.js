@@ -2,7 +2,7 @@
 // PRODUTOS
 // ------------------------------
 const API_URL = window.location.origin;
-let produtoEditando = null;
+//let produtoEditando = null;
 
 // ------------------------------
 // TOKEN PARA REQUISIÇÕES
