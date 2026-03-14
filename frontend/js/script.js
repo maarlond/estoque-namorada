@@ -15,6 +15,20 @@ const btnLogout = document.getElementById("btnLogout");
     window.location.href = "../pages/login.html";
 }*/
 
+const sidebar = document.querySelector(".sidebar");
+const toggleBtn = document.getElementById("toggleSidebar");
+toggleBtn.addEventListener("click", function () {
+
+    sidebar.classList.toggle("colapsada");
+
+    if (sidebar.classList.contains("colapsada")) {
+        toggleBtn.innerHTML = "»";
+    } else {
+        toggleBtn.innerHTML = "«";
+    }
+
+});
+
 function validarCampos() {
 
     let valido = true;
@@ -150,12 +164,12 @@ if (div) {
     proximaFrase();
 }
 
-document.getElementById("btnToggleMenu").addEventListener("click", function () {
+/*document.getElementById("btnToggleMenu").addEventListener("click", function () {
 
     const sidebar = document.getElementById("sidebar");
 
     sidebar.classList.toggle("colapsada");
 
-});
+});*/
 
 

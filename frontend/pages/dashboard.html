@@ -1,0 +1,73 @@
+<style>
+    body {
+        background: #f6f7fb;
+    }
+
+    .logo {
+        padding: 20px;
+    }
+
+    .menu {
+        list-style: none;
+        padding: 0;
+    }
+
+    .menu li {
+        padding: 15px 20px;
+        cursor: pointer;
+    }
+
+    .menu li:hover {
+        background: #e49a2f;
+    }
+
+    .card-dashboard {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="container-fluid">
+
+    <h1>Dashboard</h1>
+    <p class="text-muted">Visão geral da sua loja</p>
+
+    <div class="row g-3">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Produtos Cadastrados</h6>
+                <h3 id="totalProdutos">0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Estoque Baixo</h6>
+                <h3 id="estoqueBaixo">0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Vendas Hoje</h6>
+                <h3 id="vendasHoje">R$ 0,00</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Vendas do Mês</h6>
+                <h3 id="vendasMes">R$ 0,00</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card mt-4 p-4">
+        <h5>Vendas - Últimos 7 dias</h5>
+        <canvas id="graficoVendas"></canvas>
+    </div>
+</div>

@@ -11,9 +11,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- DataTables CSS -->
   <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./css/style.css">
-
   <style>
     /* Sidebar */
     .sidebar {
@@ -40,8 +40,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #383636;
-      margin-right: 0.75rem;
+      background-color: #3c2948;
+      margin-left: 0.75rem;
+      color: #f9a8d4;
     }
 
     /* Main content */
@@ -61,6 +62,46 @@
     table.dataTable {
       width: 100% !important;
     }
+
+    .sidebar {
+      width: 220px;
+      transition: width 0.3s;
+    }
+
+    .sidebar.colapsada {
+      width: 100px;
+    }
+
+    .sidebar.colapsada .menu-text {
+      display: none;
+    }
+
+    .sidebar-header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .toggle-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: center;
+      padding-top: 10px;
+    }
+
+    .btn-toggle-menu {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-toggle-menu:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 
@@ -68,26 +109,30 @@
   <main class="d-flex flex-nowrap">
     <!-- SIDEBAR -->
     <div class="sidebar d-flex flex-column p-3">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
-        <div class="icon-logo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-sparkles h-5 w-5 text-sidebar-primary-foreground">
-            <path
-              d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
-            </path>
-            <path d="M20 3v4"></path>
-            <path d="M22 5h-4"></path>
-            <path d="M4 17v2"></path>
-            <path d="M5 18H3"></path>
-          </svg>
-        </div>
-      </a>
+      <div class="sidebar-header d-flex align-items-center justify-content-between mb-4">
 
-      <hr>
+        <div class="d-flex align-items-center gap-2">
+          <div class="icon-logo">
+            <!-- SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-sparkles h-5 w-5 text-sidebar-primary-foreground">
+              <path
+                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
+              </path>
+              <path d="M20 3v4"></path>
+              <path d="M22 5h-4"></path>
+              <path d="M4 17v2"></path>
+              <path d="M5 18H3"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
       <ul class="nav nav-pills flex-column mb-auto">
         <li>
-          <a href="#" class="nav-link text-white">
+          <a href="#" onclick="carregarPagina('pages/dashboard.html', this)" class="nav-link text-white menu-item"
+            data-pagina="pages/dashboard.html">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="lucide lucide-layout-dashboard h-5 w-5 me-2">
@@ -100,8 +145,9 @@
           </a>
         </li>
         <li>
-          <a href="#" onclick="carregarPagina('pages/produtos.html')" class="nav-link text-white">
-            <!-- Produtos -->
+          <!-- Produtos -->
+          <a href="#" onclick="carregarPagina('pages/produtos.html', this)" class="nav-link text-white menu-item"
+            data-pagina="pages/produtos.html">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="lucide lucide-package h-5 w-5 me-2">
@@ -116,8 +162,9 @@
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link text-white">
-            <!-- Nova Venda -->
+          <!-- Nova Venda -->
+          <a href="#" onclick="carregarPagina('pages/vendas.html', this)" class="nav-link text-white menu-item"
+            data-pagina="pages/vendas.html">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="lucide lucide-shopping-cart h-5 w-5 me-2">
@@ -128,8 +175,9 @@
             Nova Venda
           </a>
         <li>
-          <a href="#" class="nav-link text-white">
-            <!-- Relatórios -->
+          <!-- Relatórios -->
+          <a href="#" onclick="carregarPagina('pages/relatorios.html', this)" class="nav-link text-white menu-item"
+            data-pagina="pages/relatorios.html">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="lucide lucide-chart-column h-5 w-5 me-2">
@@ -142,6 +190,11 @@
           </a>
         </li>
       </ul>
+      <div class="toggle-footer">
+        <button id="toggleSidebar" class="btn-toggle-menu">
+          «
+        </button>
+      </div>
       <hr>
 
       <div class="dropdown">
@@ -153,15 +206,14 @@
           <li><a class="dropdown-item" onclick="logout()" href="#">Sair</a></li>
         </ul>
       </div>
+
+
     </div>
 
     <!-- CONTEÚDO -->
     <div class="main-content" id="content">
       <!-- Aqui será carregado o conteúdo dinamicamente (, etc) -->
-      <main id="conteudoPrincipal">
-        <h2>Bem-vindo ao sistema!</h2>
-        <p>Escolha uma opção no menu à esquerda.</p>
-      </main>
+      <main id="conteudoPrincipal"></main>
     </div>
   </main>
 
@@ -183,36 +235,10 @@
 
   <script src="js/script.js"></script>
   <script src="js/produtos.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
   <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-  <script>
-    function carregarPagina(pagina) {
-
-      $("#conteudoPrincipal").load(pagina, function () {
-
-        console.log("Página carregada:", pagina);
-
-        if (pagina.includes("produtos")) {
-
-          // diminuir menu
-          document.querySelector(".sidebar").classList.add("colapsada");
-
-          setTimeout(() => {
-            if (typeof iniciarTabelaProdutos === "function") {
-              iniciarTabelaProdutos();
-            }
-          }, 100);
-
-        } else {
-
-          // voltar ao tamanho normal
-          document.querySelector(".sidebar").classList.remove("colapsada");
-
-        }
-
-      });
-
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>

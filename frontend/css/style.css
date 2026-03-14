@@ -99,7 +99,7 @@ select {
 }
 
 .sidebar.colapsada {
-    width: 80px;
+    width: 100px;
 }
 
 .sidebar.colapsada span,
@@ -121,11 +121,36 @@ select {
     padding-left: 12px;
 }
 
+.sidebar .nav-link:hover {
+    background-color: #3c2948;
+    border-radius: 8px;
+}
+
+.sidebar .nav-link {
+    color: #ff6fa5;
+    /* rosa */
+}
+
+.nav-pills .nav-link.active {
+    background-color: #3c2948 !important;
+    color: #ff6fa5 !important;
+    border-radius: 8px;
+}
+
+.nav-pills .nav-link.active svg {
+    stroke: #ff6fa5;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #3c2948;
+    color: #ffffff;
+}
+
 /* ---------- LOGO ---------- */
 
 .logo,
 .logo-sidebar {
-    background: #ec4899;
+    background: #000000;
     border-radius: 50%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -322,4 +347,18 @@ select {
     padding: 8px 16px;
     border-radius: 6px;
     font-weight: 600;
+}
+
+/* animação de troca de página */
+
+.fade-out {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all .25s ease;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all .25s ease;
 }
