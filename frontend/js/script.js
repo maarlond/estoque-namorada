@@ -15,18 +15,19 @@ const btnLogout = document.getElementById("btnLogout");
     window.location.href = "../pages/login.html";
 }*/
 
-const sidebar = document.querySelector(".sidebar");
-/*const toggleBtn = document.getElementById("toggleSidebar");
-toggleBtn.addEventListener("click", function () {
-  sidebar.classList.toggle("colapsada");
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.querySelector(".sidebar");
+  const toggleBtn = document.getElementById("toggleSidebar");
+  toggleBtn.addEventListener("click", function () {
+    sidebar.classList.toggle("colapsada");
 
-  if (sidebar.classList.contains("colapsada")) {
-    toggleBtn.innerHTML = "»";
-  } else {
-    toggleBtn.innerHTML = "«";
-  }
-});*/
-
+    if (sidebar.classList.contains("colapsada")) {
+      toggleBtn.innerHTML = "»";
+    } else {
+      toggleBtn.innerHTML = "«";
+    }
+  });
+});
 function validarCampos() {
   let valido = true;
 
