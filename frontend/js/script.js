@@ -15,19 +15,64 @@ const btnLogout = document.getElementById("btnLogout");
     window.location.href = "../pages/login.html";
 }*/
 
+/*document.addEventListener("DOMContentLoaded", () => {
+
+  const sidebar = document.querySelector(".sidebar");
+  const toggleBtn = document.getElementById("toggleSidebar");
+
+  if (toggleBtn) { // 👈 evita erro
+    toggleBtn.addEventListener("click", toggleSidebar);
+  }
+
+  const logo = document.querySelector(".icon-logo");
+
+  if (logo) { // 👈 evita erro
+    logo.addEventListener("click", toggleSidebar);
+  }
+
+  function toggleSidebar(){
+    sidebar.classList.toggle("colapsada");
+
+    if (toggleBtn) {
+      toggleBtn.innerHTML = sidebar.classList.contains("colapsada") ? "»" : "«";
+    }
+  }
+
+});
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.querySelector(".sidebar");
   const toggleBtn = document.getElementById("toggleSidebar");
-  toggleBtn.addEventListener("click", function () {
-    sidebar.classList.toggle("colapsada");
 
+  if (sidebar) {
+    sidebar.classList.add("colapsada");
+  }
+
+  // clique manual
+  function toggleSidebar() {
+    sidebar.classList.toggle("colapsada");
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", toggleSidebar);
+  }
+
+  // 👇 HOVER (abrir)
+  sidebar.addEventListener("mouseenter", () => {
     if (sidebar.classList.contains("colapsada")) {
-      toggleBtn.innerHTML = "»";
-    } else {
-      toggleBtn.innerHTML = "«";
+      sidebar.classList.remove("colapsada");
+    }
+  });
+
+  // 👇 SAIR (fechar)
+  sidebar.addEventListener("mouseleave", () => {
+    if (!sidebar.classList.contains("colapsada")) {
+      sidebar.classList.add("colapsada");
     }
   });
 });
+
 function validarCampos() {
   let valido = true;
 

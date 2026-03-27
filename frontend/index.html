@@ -27,37 +27,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/style.css" />
     <style>
-      /* Sidebar */
-      .sidebar {
-        width: 280px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
-        background-color: #c9588b;
-        color: white;
-        overflow-y: auto;
-        flex-shrink: 0;
-      }
-
-      .sidebar .nav-link:hover {
-        background-color: #3c2948;
-        /* cor ao passar o mouse */
-        border-radius: 6px;
-        margin: 0.2rem;
-      }
-
-      .icon-logo {
-        height: 40px;
-        width: 40px;
-        border-radius: 30%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #3c2948;
-        margin-left: 0.75rem;
-        color: #f9a8d4;
-      }
-
       /* Main content */
       .main-content {
         flex-grow: 1;
@@ -76,38 +45,13 @@
         width: 100% !important;
       }
 
-      .sidebar {
-        width: 220px;
-        transition: width 0.3s;
-      }
-
-      .sidebar.colapsada {
-        width: 100px;
-      }
-
-      .sidebar.colapsada .menu-text {
-        display: none;
-      }
-
-      .sidebar-header {
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .toggle-footer {
-        margin-top: auto;
-        display: flex;
-        justify-content: center;
-        padding-top: 10px;
-      }
-
       .btn-toggle-menu {
         background: rgba(255, 255, 255, 0.1);
         border: none;
         color: white;
-        font-size: 20px;
+        font-size: 18px;
         cursor: pointer;
-        padding: 6px 10px;
+        padding: 6px 8px;
         border-radius: 6px;
         transition: 0.2s;
       }
@@ -115,11 +59,48 @@
       .btn-toggle-menu:hover {
         background: rgba(255, 255, 255, 0.2);
       }
+
+      .icon-logo {
+        height: 40px;
+        width: 40px;
+        border-radius: 10px;
+        background: #3c2948;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* dois ícones ocupam o mesmo espaço */
+      .logo-icon,
+      .logo-toggle {
+        position: absolute;
+        transition: 0.3s;
+      }
+
+      /* estado inicial */
+      .logo-toggle {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      /* ícones sobrepostos */
+      .logo-icon,
+      .logo-toggle {
+        position: absolute;
+        transition: 0.3s;
+      }
+
+      /* toggle escondido */
+      .logo-toggle {
+        opacity: 0;
+        transform: scale(0.5);
+      }
     </style>
   </head>
 
   <body>
-  
     <main class="d-flex flex-nowrap">
       <!-- SIDEBAR -->
       <div class="sidebar d-flex flex-column p-3">
@@ -129,26 +110,32 @@
           <div class="d-flex align-items-center gap-2">
             <div class="icon-logo">
               <!-- SVG -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-sparkles h-5 w-5 text-sidebar-primary-foreground"
-              >
-                <path
-                  d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
-                ></path>
-                <path d="M20 3v4"></path>
-                <path d="M22 5h-4"></path>
-                <path d="M4 17v2"></path>
-                <path d="M5 18H3"></path>
-              </svg>
+              <div class="logo-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-sparkles h-5 w-5 text-sidebar-primary-foreground"
+                >
+                  <path
+                    d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                  ></path>
+                  <path d="M20 3v4"></path>
+                  <path d="M22 5h-4"></path>
+                  <path d="M4 17v2"></path>
+                  <path d="M5 18H3"></path>
+                </svg>
+              </div>
+              <!--<div class="toggle-footer">
+                <button id="toggleSidebar" class="btn-toggle-menu">«</button>
+              </div>-->
+              <div class="logo-toggle">☰</div>
             </div>
           </div>
         </div>
@@ -171,14 +158,14 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-layout-dashboard h-5 w-5 me-2"
+                class="lucide lucide-layout-dashboard h-5 w-5"
               >
                 <rect width="7" height="9" x="3" y="3" rx="1"></rect>
                 <rect width="7" height="5" x="14" y="3" rx="1"></rect>
                 <rect width="7" height="9" x="14" y="12" rx="1"></rect>
                 <rect width="7" height="5" x="3" y="16" rx="1"></rect>
               </svg>
-              Dashboard
+              <span>Dashboard</span>
             </a>
           </li>
           <li>
@@ -198,7 +185,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-package h-5 w-5 me-2"
+                class="lucide lucide-package h-5 w-5"
               >
                 <path
                   d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"
@@ -207,7 +194,7 @@
                 <polyline points="3.29 7 12 12 20.71 7"></polyline>
                 <path d="m7.5 4.27 9 5.15"></path>
               </svg>
-              Produtos
+              <span>Produtos</span>
             </a>
           </li>
           <li>
@@ -227,7 +214,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-shopping-cart h-5 w-5 me-2"
+                class="lucide lucide-shopping-cart h-5 w-5"
               >
                 <circle cx="8" cy="21" r="1"></circle>
                 <circle cx="19" cy="21" r="1"></circle>
@@ -235,7 +222,7 @@
                   d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
                 ></path>
               </svg>
-              Nova Venda
+              <span>Nova Venda</span>
             </a>
           </li>
 
@@ -256,20 +243,18 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-chart-column h-5 w-5 me-2"
+                class="lucide lucide-chart-column h-5 w-5"
               >
                 <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
                 <path d="M18 17V9"></path>
                 <path d="M13 17V5"></path>
                 <path d="M8 17v-3"></path>
               </svg>
-              Relatórios
+              <span>Relatórios</span>
             </a>
           </li>
         </ul>
-        <div class="toggle-footer">
-          <button id="toggleSidebar" class="btn-toggle-menu">«</button>
-        </div>
+
         <hr />
 
         <div class="dropdown">
@@ -279,7 +264,10 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <strong id="emailUsuario"></strong>
+            <div class="user-info">
+              <i class="bi bi-person-circle"></i>
+              <span id="emailUsuario">admin@email.com</span>
+            </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
             <li>
@@ -319,7 +307,7 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      carregarPagina('pages/dashboard.html');
+      carregarPagina("pages/dashboard.html");
     </script>
   </body>
 </html>

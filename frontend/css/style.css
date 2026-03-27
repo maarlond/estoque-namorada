@@ -60,7 +60,7 @@ button:hover {
 }
 
 .btnEditar:hover {
-  background: #adba60;
+  background: #318682;
 }
 
 .btnRemover {
@@ -92,11 +92,24 @@ select {
 
 /* ---------- SIDEBAR ---------- */
 
+/* Sidebar */
 .sidebar {
   width: 280px;
-  background: white;
-  border-right: 1px solid #f3f4f6;
-  transition: width 0.3s;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: #c9588b;
+  color: white;
+  overflow-y: auto;
+  flex-shrink: 0;
+  transition: width 0.5s;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #3c2948;
+  /* cor ao passar o mouse */
+  border-radius: 6px;
+  margin: 0.2rem;
 }
 
 .sidebar.colapsada {
@@ -108,28 +121,89 @@ select {
   font-size: 0;
 }
 
-.sidebar.colapsada span {
-  display: none;
+/* HOVER (só quando sidebar estiver fechada) */
+.sidebar.fechado .icon-logo:hover .logo-icon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.sidebar.fechado .icon-logo:hover .logo-toggle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/*------------------------------------------------*/
+
+/* transição suave */
+.sidebar {
+  width: 260px;
+  transition: width 0.3s ease;
+}
+
+/* estado fechado */
+.sidebar.colapsada {
+  width: 70px;
+}
+
+/* esconder textos quando fechado */
+/* texto do menu */
+.sidebar .nav-link span {
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  margin-left: 0.5em !important; /* 👈 força espaço */
+}
+
+/* estado fechado */
+.sidebar.colapsada .nav-link span {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* estado aberto */
+.sidebar:not(.colapsada) .nav-link span {
+  opacity: 1;
+  width: auto;
+}
+
+/*quando sidebar estiver colapsada */
+.sidebar.colapsada .nav-link {
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  padding: 7px 0; /* remove lateral */
+  margin: 0;
+}
+
+/* remove qualquer margem dos ícones */
+.sidebar.colapsada .nav-link svg {
+  margin: 0 !important;
+}
+
+/* remove espaçamento entre itens */
+.sidebar.colapsada .nav-link {
+  gap: 0 !important;
+}
+/* quando sidebar colapsada */
+
+.sidebar .nav-link {
+  color: #ff6fa5;
+  /* rosa */
 }
 
 .nav-link {
   transition: 0.2s;
 }
 
+.sidebar .nav-link svg {
+  width: 22px;
+  height: 22px;
+}
+
 .nav-link:hover {
   background: #ffe4ec;
   color: #ec4899 !important;
   padding-left: 12px;
-}
-
-.sidebar .nav-link:hover {
-  background-color: #3c2948;
-  border-radius: 8px;
-}
-
-.sidebar .nav-link {
-  color: #ff6fa5;
-  /* rosa */
 }
 
 .nav-pills .nav-link.active {
@@ -142,11 +216,31 @@ select {
   stroke: #ff6fa5;
 }
 
-.sidebar .nav-link:hover {
-  background-color: #3c2948;
-  color: #ffffff;
+/* ---------- EMAIL ---------- */
+
+.sidebar.colapsada .user-info span {
+  display: none;
 }
 
+#emailUsuario {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 180px;
+  transition: opacity 0.2s ease;
+  text-overflow: ellipsis;
+}
+
+.sidebar.colapsada #emailUsuario {
+  opacity: 0;
+  max-width: 0;
+}
+
+.sidebar:not(.colapsada) #emailUsuario {
+  opacity: 1;
+  max-width: 180px;
+}
 /* ---------- LOGO ---------- */
 
 .logo,
@@ -274,7 +368,7 @@ select {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  width: 500px;
+  width: 600px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
@@ -362,4 +456,27 @@ select {
   opacity: 1;
   transform: translateY(0);
   transition: all 0.25s ease;
+}
+
+/* ICON LOGO */
+.icon-logo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  color: #c9588b;
+}
+
+.icon-logo:hover .logo-icon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.icon-logo:hover .logo-toggle {
+  opacity: 1;
+  transform: scale(1);
 }
