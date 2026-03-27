@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR" data-bs-theme="auto">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,15 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css"
-    />
-    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <!-- DataTables CSS -->
@@ -23,291 +15,572 @@
       href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
       rel="stylesheet"
     />
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/style.css" />
+
     <style>
-      /* Main content */
-      .main-content {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-x: auto;
+      /* ── VARIÁVEIS ── */
+      :root {
+        --sidebar-bg: #c9588b;
+        --sidebar-hover: rgba(255, 255, 255, 0.08);
+        --sidebar-active: #3c2948;
+        --sidebar-width: 220px;
+        --sidebar-collapsed: 64px;
+        --accent: #8b5cf6;
+        --transition: 0.25s ease;
       }
 
-      /* Header */
-      .header img {
-        height: 2em;
-        vertical-align: text-bottom;
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
-      /* DataTable responsive */
-      table.dataTable {
-        width: 100% !important;
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
       }
 
-      .btn-toggle-menu {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        padding: 6px 8px;
-        border-radius: 6px;
-        transition: 0.2s;
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f5f3f0;
+        display: flex;
       }
 
-      .btn-toggle-menu:hover {
-        background: rgba(255, 255, 255, 0.2);
+      /* ── LAYOUT ── */
+      .app-layout {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
+        background: var(--sidebar-bg);
+        display: flex;
+        flex-direction: column;
+        padding: 16px 12px;
+        transition:
+          width var(--transition),
+          min-width var(--transition);
+        overflow: hidden;
+        position: relative;
+        z-index: 100;
+      }
+
+      .sidebar.colapsada {
+        width: var(--sidebar-collapsed);
+        min-width: var(--sidebar-collapsed);
+      }
+
+      /* ── LOGO / HEADER ── */
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 28px;
+        padding: 0 4px;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
       .icon-logo {
-        height: 40px;
-        width: 40px;
+        width: 38px;
+        height: 38px;
         border-radius: 10px;
         background: #3c2948;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        position: relative;
+        flex-shrink: 0;
+        color: #c9588b;
+      }
+
+      .sidebar-brand {
+        overflow: hidden;
+        transition:
+          opacity var(--transition),
+          width var(--transition);
+      }
+
+      .sidebar-brand-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #fff;
+        white-space: nowrap;
+      }
+
+      .sidebar-brand-sub {
+        font-size: 0.72rem;
+        color: rgb(255, 255, 255);
+        white-space: nowrap;
+      }
+
+      .sidebar.colapsada .sidebar-brand {
+        opacity: 0;
+        width: 0;
+        pointer-events: none;
+      }
+
+      /* ── NAV ITEMS ── */
+      .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .sidebar-nav .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 10px;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        white-space: nowrap;
+        transition:
+          background var(--transition),
+          color var(--transition);
         overflow: hidden;
       }
 
-      /* dois ícones ocupam o mesmo espaço */
-      .logo-icon,
-      .logo-toggle {
-        position: absolute;
-        transition: 0.3s;
+      .sidebar-nav .nav-link svg {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
       }
 
-      /* estado inicial */
-      .logo-toggle {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      /* ícones sobrepostos */
-      .logo-icon,
-      .logo-toggle {
-        position: absolute;
-        transition: 0.3s;
+      .sidebar-nav .nav-link span {
+        overflow: hidden;
+        transition:
+          opacity var(--transition),
+          width var(--transition);
+        white-space: nowrap;
       }
 
-      /* toggle escondido */
-      .logo-toggle {
+      .sidebar.colapsada .sidebar-nav .nav-link span {
         opacity: 0;
-        transform: scale(0.5);
+        width: 0;
+        pointer-events: none;
+      }
+
+      .sidebar-nav .nav-link:hover {
+        color: #fff;
+      }
+
+      .sidebar-nav .nav-link.active {
+        background: var(--sidebar-active);
+        color: #ff6fa5;
+      }
+
+      /* ── DIVISOR ── */
+      .sidebar-divider {
+        border-color: rgba(255, 255, 255, 0.1);
+        margin: 12px 0;
+      }
+
+      /* ── USUÁRIO ── */
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background var(--transition);
+        white-space: nowrap;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .sidebar-user:hover {
+        background: var(--sidebar-hover);
+      }
+
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #3c2948;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #c9588b;
+        font-size: 1rem;
+      }
+
+      .user-info-text {
+        overflow: hidden;
+        transition: opacity var(--transition);
+      }
+      .user-email {
+        font-size: 0.78rem;
+        color: rgb(255, 255, 255);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 130px;
+      }
+
+      .sidebar.colapsada .user-info-text {
+        opacity: 0;
+        width: 0;
+        pointer-events: none;
+      }
+
+      /* dropdown logout */
+      .user-dropdown {
+        display: none;
+        position: absolute;
+        bottom: 52px;
+        left: 12px;
+        background: #2d1f3d;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 6px;
+        min-width: 160px;
+        z-index: 200;
+      }
+
+      .user-dropdown.show {
+        display: block;
+      }
+
+      .user-dropdown a {
+        display: block;
+        padding: 8px 12px;
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        border-radius: 7px;
+        font-size: 0.85rem;
+        transition: background 0.15s;
+      }
+
+      .user-dropdown a:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+
+      /* ── CONTEÚDO PRINCIPAL ── */
+      .main-content {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #f5f3f0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #conteudoPrincipal {
+        flex: 1;
+        padding: 0;
+      }
+
+      /* ── ANIMAÇÕES ── */
+      .fade-out {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      .fade-in {
+        opacity: 1;
+        transition: opacity 0.25s ease;
+      }
+
+      /* ── DATATABLE ── */
+      table.dataTable {
+        width: 100% !important;
+      }
+
+      /* ── TOOLTIP no colapso ── */
+      .sidebar.colapsada .nav-link {
+        position: relative;
+      }
+
+      /* ── RESPONSIVO ── */
+      @media (max-width: 640px) {
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          z-index: 999;
+        }
+        .sidebar.colapsada {
+          width: 0;
+          min-width: 0;
+          padding: 0;
+        }
+        .main-content {
+          margin-left: 0;
+        }
       }
     </style>
   </head>
 
   <body>
-    <main class="d-flex flex-nowrap">
-      <!-- SIDEBAR -->
-      <div class="sidebar d-flex flex-column p-3">
-        <div
-          class="sidebar-header d-flex align-items-center justify-content-between mb-4"
-        >
-          <div class="d-flex align-items-center gap-2">
-            <div class="icon-logo">
-              <!-- SVG -->
-              <div class="logo-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-sparkles h-5 w-5 text-sidebar-primary-foreground"
-                >
-                  <path
-                    d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
-                  ></path>
-                  <path d="M20 3v4"></path>
-                  <path d="M22 5h-4"></path>
-                  <path d="M4 17v2"></path>
-                  <path d="M5 18H3"></path>
-                </svg>
-              </div>
-              <!--<div class="toggle-footer">
-                <button id="toggleSidebar" class="btn-toggle-menu">«</button>
-              </div>-->
-              <div class="logo-toggle">☰</div>
-            </div>
+    <div class="app-layout">
+      <!-- ═══ SIDEBAR ═══ -->
+      <aside class="sidebar colapsada" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-header">
+          <div class="icon-logo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+              />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+              <path d="M4 17v2" />
+              <path d="M5 18H3" />
+            </svg>
+          </div>
+          <div class="sidebar-brand">
+            <div class="sidebar-brand-name">Essência</div>
+
+            <div class="sidebar-brand-sub">Perfumes & Cosméticos</div>
           </div>
         </div>
 
-        <ul class="nav nav-pills flex-column mb-auto">
+        <!-- Nav -->
+        <ul class="sidebar-nav">
           <li>
             <a
               href="#"
-              onclick="carregarPagina('pages/dashboard.html', this)"
-              class="nav-link text-white menu-item"
+              class="nav-link menu-item"
               data-pagina="pages/dashboard.html"
+              onclick="carregarPagina('pages/dashboard.html', this)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-layout-dashboard h-5 w-5"
               >
-                <rect width="7" height="9" x="3" y="3" rx="1"></rect>
-                <rect width="7" height="5" x="14" y="3" rx="1"></rect>
-                <rect width="7" height="9" x="14" y="12" rx="1"></rect>
-                <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+                <rect width="7" height="9" x="3" y="3" rx="1" />
+                <rect width="7" height="5" x="14" y="3" rx="1" />
+                <rect width="7" height="9" x="14" y="12" rx="1" />
+                <rect width="7" height="5" x="3" y="16" rx="1" />
               </svg>
               <span>Dashboard</span>
             </a>
           </li>
           <li>
-            <!-- Produtos -->
             <a
               href="#"
-              onclick="carregarPagina('pages/produtos.html', this)"
-              class="nav-link text-white menu-item"
+              class="nav-link menu-item"
               data-pagina="pages/produtos.html"
+              onclick="carregarPagina('pages/produtos.html', this)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-package h-5 w-5"
               >
                 <path
                   d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"
-                ></path>
-                <path d="M12 22V12"></path>
-                <polyline points="3.29 7 12 12 20.71 7"></polyline>
-                <path d="m7.5 4.27 9 5.15"></path>
+                />
+                <path d="M12 22V12" />
+                <polyline points="3.29 7 12 12 20.71 7" />
+                <path d="m7.5 4.27 9 5.15" />
               </svg>
               <span>Produtos</span>
             </a>
           </li>
           <li>
-            <!-- Nova Venda -->
             <a
               href="#"
-              onclick="carregarPagina('pages/vendas.html', this)"
-              class="nav-link text-white menu-item"
+              class="nav-link menu-item"
               data-pagina="pages/vendas.html"
+              onclick="carregarPagina('pages/vendas.html', this)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-shopping-cart h-5 w-5"
               >
-                <circle cx="8" cy="21" r="1"></circle>
-                <circle cx="19" cy="21" r="1"></circle>
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
                 <path
                   d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
-                ></path>
+                />
               </svg>
               <span>Nova Venda</span>
             </a>
           </li>
-
           <li>
-            <!-- Relatórios -->
             <a
               href="#"
-              onclick="carregarPagina('pages/relatorios.html', this)"
-              class="nav-link text-white menu-item"
+              class="nav-link menu-item"
               data-pagina="pages/relatorios.html"
+              onclick="carregarPagina('pages/relatorios.html', this)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-chart-column h-5 w-5"
               >
-                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
-                <path d="M18 17V9"></path>
-                <path d="M13 17V5"></path>
-                <path d="M8 17v-3"></path>
+                <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+                <path d="M18 17V9" />
+                <path d="M13 17V5" />
+                <path d="M8 17v-3" />
               </svg>
               <span>Relatórios</span>
             </a>
           </li>
         </ul>
 
-        <hr />
+        <hr class="sidebar-divider" />
 
-        <div class="dropdown">
-          <a
-            href="#"
-            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <div class="user-info">
-              <i class="bi bi-person-circle"></i>
-              <span id="emailUsuario">admin@email.com</span>
-            </div>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li>
-              <a class="dropdown-item" onclick="logout()" href="#">Sair</a>
-            </li>
-          </ul>
+        <!-- Usuário -->
+        <div
+          class="sidebar-user"
+          id="sidebarUser"
+          onclick="toggleUserDropdown()"
+        >
+          <div class="user-avatar">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M20 21a8 8 0 1 0-16 0" />
+            </svg>
+          </div>
+          <div class="user-info-text">
+            <div class="user-email" id="emailUsuario">admin@email.com</div>
+          </div>
         </div>
-      </div>
 
-      <!-- CONTEÚDO -->
-      <div class="main-content" id="content">
-        <!-- Aqui será carregado o conteúdo dinamicamente (, etc) -->
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" onclick="logout()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="margin-right: 6px; vertical-align: middle"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Sair
+          </a>
+        </div>
+      </aside>
+
+      <!-- ═══ CONTEÚDO ═══ -->
+      <div class="main-content">
         <main id="conteudoPrincipal"></main>
       </div>
-    </main>
+    </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery e DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <!-- SweetAlert -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-      // Mostrar email do usuário logado
+      // Email do usuário
       const email = localStorage.getItem("emailUsuario");
-      if (email) {
-        document.getElementById("emailUsuario").textContent = email;
+      if (email) document.getElementById("emailUsuario").textContent = email;
+
+      // ── SIDEBAR hover expand ──
+      const sidebar = document.getElementById("sidebar");
+
+      sidebar.addEventListener("mouseenter", () =>
+        sidebar.classList.remove("colapsada"),
+      );
+      sidebar.addEventListener("mouseleave", () => {
+        sidebar.classList.add("colapsada");
+        document.getElementById("userDropdown").classList.remove("show");
+      });
+
+      // ── Dropdown usuário ──
+      function toggleUserDropdown() {
+        document.getElementById("userDropdown").classList.toggle("show");
       }
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("sidebarUser").contains(e.target)) {
+          document.getElementById("userDropdown").classList.remove("show");
+        }
+      });
     </script>
 
     <script src="js/script.js"></script>
     <script src="js/produtos.js"></script>
     <script src="js/dashboard.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/vendas.js"></script>
     <script src="js/login.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-      carregarPagina("pages/dashboard.html");
-    </script>
+    <script src="js/app.js"></script>
   </body>
 </html>

@@ -37,6 +37,7 @@ function validarCampos() {
 }
 
 async function login() {
+  console.log("aaaaaaaaaa");
   if (!validarCampos()) return;
 
   const email = document.getElementById("email").value;
@@ -50,6 +51,8 @@ async function login() {
     });
     return;
   }
+  console.log("email" + email);
+  console.log("senha" + senha);
 
   const resposta = await fetch(`${API_URL}/login`, {
     method: "POST",
@@ -59,6 +62,7 @@ async function login() {
     body: JSON.stringify({ email, senha }),
   });
 
+  console.log("resposta: " + resposta);
   const data = await resposta.json();
 
   if (data.token) {

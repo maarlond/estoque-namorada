@@ -1,35 +1,5 @@
-/* ---------- BODY ---------- */
-
-body {
-  font-family: "Inter", sans-serif;
-  background: linear-gradient(135deg, #fff1f5, #ffe4ec);
-  margin: 0;
-  padding: 0;
-  animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---------- TITULOS ---------- */
-
-h1,
-h2 {
-  color: #374151;
-  text-align: center;
-}
-
 /* ---------- BOTÕES ---------- */
-
+/*
 button {
   padding: 8px;
   border: none;
@@ -73,22 +43,7 @@ button:hover {
 
 .btnRemover:hover {
   background: #dc2626;
-}
-
-/* ---------- FORM ---------- */
-
-.form-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-input,
-select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #f9a8d4;
-}
+}*/
 
 /* ---------- SIDEBAR ---------- */
 
@@ -112,26 +67,6 @@ select {
   margin: 0.2rem;
 }
 
-.sidebar.colapsada {
-  width: 100px;
-}
-
-.sidebar.colapsada span,
-.sidebar.colapsada .nav-link {
-  font-size: 0;
-}
-
-/* HOVER (só quando sidebar estiver fechada) */
-.sidebar.fechado .icon-logo:hover .logo-icon {
-  opacity: 0;
-  transform: scale(0.5);
-}
-
-.sidebar.fechado .icon-logo:hover .logo-toggle {
-  opacity: 1;
-  transform: scale(1);
-}
-
 /*------------------------------------------------*/
 
 /* transição suave */
@@ -143,61 +78,6 @@ select {
 /* estado fechado */
 .sidebar.colapsada {
   width: 70px;
-}
-
-/* esconder textos quando fechado */
-/* texto do menu */
-.sidebar .nav-link span {
-  white-space: nowrap;
-  transition: all 0.25s ease;
-  margin-left: 0.5em !important; /* 👈 força espaço */
-}
-
-/* estado fechado */
-.sidebar.colapsada .nav-link span {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-/* estado aberto */
-.sidebar:not(.colapsada) .nav-link span {
-  opacity: 1;
-  width: auto;
-}
-
-/*quando sidebar estiver colapsada */
-.sidebar.colapsada .nav-link {
-  display: flex;
-  justify-content: center !important;
-  align-items: center;
-  padding: 7px 0; /* remove lateral */
-  margin: 0;
-}
-
-/* remove qualquer margem dos ícones */
-.sidebar.colapsada .nav-link svg {
-  margin: 0 !important;
-}
-
-/* remove espaçamento entre itens */
-.sidebar.colapsada .nav-link {
-  gap: 0 !important;
-}
-/* quando sidebar colapsada */
-
-.sidebar .nav-link {
-  color: #ff6fa5;
-  /* rosa */
-}
-
-.nav-link {
-  transition: 0.2s;
-}
-
-.sidebar .nav-link svg {
-  width: 22px;
-  height: 22px;
 }
 
 .nav-link:hover {
@@ -214,55 +94,6 @@ select {
 
 .nav-pills .nav-link.active svg {
   stroke: #ff6fa5;
-}
-
-/* ---------- EMAIL ---------- */
-
-.sidebar.colapsada .user-info span {
-  display: none;
-}
-
-#emailUsuario {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  max-width: 180px;
-  transition: opacity 0.2s ease;
-  text-overflow: ellipsis;
-}
-
-.sidebar.colapsada #emailUsuario {
-  opacity: 0;
-  max-width: 0;
-}
-
-.sidebar:not(.colapsada) #emailUsuario {
-  opacity: 1;
-  max-width: 180px;
-}
-/* ---------- LOGO ---------- */
-
-.logo,
-.logo-sidebar {
-  background: #000000;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* ---------- CONTEUDO ---------- */
-
-.main-content {
-  padding: 30px;
-}
-
-/* ---------- CONTAINER TABELA ---------- */
-
-.table-container {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- TABELA ---------- */
@@ -312,137 +143,6 @@ select {
   text-align: center;
 }
 
-/* ---------- DATATABLES ---------- */
-
-.dataTables_wrapper {
-  margin-top: 10px;
-  color: #374151;
-}
-
-.dataTables_length select {
-  border: 1px solid #f9a8d4;
-  border-radius: 6px;
-}
-
-.dataTables_filter input {
-  border: 1px solid #f9a8d4;
-  border-radius: 20px;
-  padding: 6px 14px;
-}
-
-.dataTables_filter input:focus {
-  border-color: #ec4899;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.25);
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-  background: #ec4899 !important;
-  color: white !important;
-  border-radius: 6px;
-}
-
-/* ---------- ERRO INPUT ---------- */
-
-.campo-erro {
-  border: 2px solid #ff4d4f !important;
-  background: #fff0f0;
-}
-
-/* ---------- MODAL ---------- */
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.65);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 600px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.modal-header h3 {
-  color: #374151;
-}
-
-.btnFechar {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* ---------- GRID FORM ---------- */
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.form-grid input,
-.form-grid select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #f9a8d4;
-}
-
-/* ---------- UPLOAD ---------- */
-
-.upload-imagem {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.preview-img {
-  width: 120px;
-  border-radius: 8px;
-  display: none;
-}
-
-/* ---------- BOTÕES MODAL ---------- */
-
-.modal-botoes {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.btnCancelar {
-  background: #9ca3af;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-}
-
-.btnSalvar {
-  background: #ec4899;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-}
 
 /* animação de troca de página */
 
@@ -456,27 +156,4 @@ select {
   opacity: 1;
   transform: translateY(0);
   transition: all 0.25s ease;
-}
-
-/* ICON LOGO */
-.icon-logo {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  color: #c9588b;
-}
-
-.icon-logo:hover .logo-icon {
-  opacity: 0;
-  transform: scale(0.5);
-}
-
-.icon-logo:hover .logo-toggle {
-  opacity: 1;
-  transform: scale(1);
 }

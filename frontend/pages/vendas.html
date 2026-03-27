@@ -1,82 +1,634 @@
-<!-- Header com título e botão de logout -->
-<header class="header">
-    <div class="top-bar">
-        <button class="btnNovo" onclick="abrirModalVenda()">
-            + Nova Venda
-        </button>
-    </div>
-    <!-- Tabela de produtos -->
-     
-    <div class="table-container">
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova Venda</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        <table id="tabelaProdutos" class="display nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Código</th>
-                    <th>Marca</th>
-                    <th>Quantidade</th>
-                    <th>Preço Custo</th>
-                    <th>Preço Venda</th>
-                    <th>Valor Total em Estoque</th>
-                    <th>Valor Total de lucro</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="6" style="font-weight: bold;">Totais:</td>
-                    <td style="text-align: center;" id="totalEstoque"></td>
-                    <td style="text-align: center;" id="totalLucro"></td>
-                </tr>
-            </tfoot>
-            <tbody id="listaProdutos"></tbody>
-        </table>
+      body {
+        background: #f5f3f0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        color: #1a1a1a;
+      }
 
-        <div id="modalProduto" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Novo Produto</h3>
-                    <button class="btnFechar" onclick="fecharModalProduto()">✖</button>
-                </div>
-                <form id="formProduto" onsubmit="event.preventDefault(); adicionarProduto();">
-                    <div class="form-grid">
-                        <input type="text" id="nome" placeholder="Nome do Produto" required>
-                        <input type="text" id="codigo" placeholder="Código do Produto">
-                        <select id="marca">
-                            <option value="Boticário">Boticário</option>
-                            <option value="Eudora">Eudora</option>
-                        </select>
+      /* ── LAYOUT PRINCIPAL ── */
+      .venda-wrapper {
+        display: flex;
+        gap: 24px;
+        padding: 32px 28px;
+        min-height: 100vh;
+      }
 
-                        <input type="number" id="quantidade" placeholder="Quantidade">
+      /* ── COLUNA ESQUERDA ── */
+      .col-produtos {
+        flex: 1;
+        min-width: 0;
+      }
 
-                        <input type="number" id="preco_custo" placeholder="Preço de Custo" step="0.01">
+      .page-title {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.1;
+      }
+      .page-subtitle {
+        color: #888;
+        font-size: 0.92rem;
+        margin-top: 4px;
+        margin-bottom: 20px;
+      }
 
-                        <input type="number" id="preco_venda" placeholder="Preço de Venda" step="0.01">
+      /* busca */
+      .search-wrap {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
+      }
+      .search-input {
+        width: 100%;
+        padding: 11px 14px 11px 42px;
+        border: 1.5px solid #e5e0da;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-input:focus {
+        border-color: #8b5cf6;
+      }
 
-                    </div>
-                    <!-- Upload imagem -->
-                    <div class="upload-imagem">
+      /* grid de produtos */
+      .produtos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 14px;
+      }
 
-                        <label>Imagem do Produto</label>
+      .produto-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s,
+          transform 0.15s;
+        user-select: none;
+      }
+      .produto-card:hover {
+        border-color: #8b5cf6;
+        box-shadow: 0 4px 16px rgba(139, 92, 246, 0.12);
+        transform: translateY(-2px);
+      }
+      .produto-card.sem-estoque {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .produto-card.sem-estoque:hover {
+        border-color: transparent;
+        box-shadow: none;
+        transform: none;
+      }
 
-                        <input type="file" id="imagemProduto" accept="image/*">
+      .produto-img {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #f0edf8;
+      }
+      .produto-img-placeholder {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        background: #3c2948;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.4rem;
+      }
 
-                        <img id="previewImagem" class="preview-img">
+      .produto-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .produto-nome {
+        font-weight: 600;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .produto-preco {
+        color: #8b5cf6;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-top: 2px;
+      }
+      .produto-estoque {
+        font-size: 0.78rem;
+        color: #888;
+        margin-top: 3px;
+      }
+      .badge-estoque-baixo {
+        color: #e67e22 !important;
+      }
 
-                    </div>
+      /* estado vazio */
+      .empty-state {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 50px 20px;
+        color: #bbb;
+      }
+      .empty-state svg {
+        margin-bottom: 12px;
+        opacity: 0.4;
+      }
 
-                    <div class="modal-botoes">
+      /* loading skeleton */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0edf8 25%,
+          #e8e3f5 50%,
+          #f0edf8 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: 10px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skeleton-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
 
-                        <button type="button" class="btnCancelar" onclick="fecharModalProduto()">
-                            Cancelar
-                        </button>
+      /* ── COLUNA DIREITA — CARRINHO ── */
+      .col-carrinho {
+        width: 360px;
+        flex-shrink: 0;
+      }
 
-                        <button type="submit" class="btnSalvar">
-                            Salvar Produto
-                        </button>
-                    </div>
-                </form>
-            </div>
+      .carrinho-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 24px;
+        position: sticky;
+        top: 24px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+      }
+
+      .carrinho-titulo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 16px;
+        color: #1a1a1a;
+      }
+      .carrinho-titulo svg {
+        color: #8b5cf6;
+      }
+
+      /* itens carrinho */
+      .carrinho-vazio {
+        text-align: center;
+        color: #bbb;
+        padding: 28px 0;
+        font-size: 0.92rem;
+      }
+
+      .carrinho-items {
+        margin-bottom: 4px;
+      }
+
+      .carrinho-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0edf8;
+      }
+      .carrinho-item:last-child {
+        border-bottom: none;
+      }
+
+      .ci-nome {
+        flex: 1;
+        font-size: 0.88rem;
+        font-weight: 500;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ci-qtd {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .ci-qtd button {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        border: 1.5px solid #e5e0da;
+        background: #f9f7ff;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        color: #555;
+        transition: background 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ci-qtd button:hover {
+        background: #ede9ff;
+        border-color: #8b5cf6;
+      }
+      .ci-qtd span {
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-width: 20px;
+        text-align: center;
+      }
+      .ci-preco {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #8b5cf6;
+        white-space: nowrap;
+      }
+      .ci-remove {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #ccc;
+        padding: 2px;
+        border-radius: 4px;
+        transition: color 0.15s;
+        display: flex;
+      }
+      .ci-remove:hover {
+        color: #e74c3c;
+      }
+
+      /* total */
+      .carrinho-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 16px 0 20px;
+        padding-top: 14px;
+        border-top: 1.5px solid #f0edf8;
+      }
+      .carrinho-total span:first-child {
+        font-weight: 600;
+        color: #555;
+      }
+      .total-valor {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #8b5cf6;
+      }
+
+      /* campos */
+      .campo-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 6px;
+      }
+      .campo-label .req {
+        color: #e74c3c;
+      }
+
+      .campo-select,
+      .campo-input,
+      .campo-textarea {
+        width: 100%;
+        border: 1.5px solid #e5e0da;
+        border-radius: 9px;
+        padding: 9px 12px;
+        font-size: 0.9rem;
+        background: #fff;
+        color: #1a1a1a;
+        outline: none;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .campo-select:focus,
+      .campo-input:focus,
+      .campo-textarea:focus {
+        border-color: #8b5cf6;
+      }
+      .campo-textarea {
+        resize: vertical;
+        min-height: 72px;
+      }
+
+      .campo-grupo {
+        margin-bottom: 14px;
+      }
+
+      /* botão finalizar */
+      .btn-finalizar {
+        width: 100%;
+        padding: 13px;
+        background: #8b5cf6;
+        color: #fff;
+        border: none;
+        border-radius: 11px;
+        font-size: 0.98rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        margin-top: 6px;
+      }
+      .btn-finalizar:hover {
+        background: #7c3aed;
+        transform: translateY(-1px);
+      }
+      .btn-finalizar:active {
+        transform: translateY(0);
+      }
+      .btn-finalizar:disabled {
+        background: #c4b5fd;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* responsivo */
+      @media (max-width: 768px) {
+        .venda-wrapper {
+          flex-direction: column;
+          padding: 20px 16px;
+        }
+        .col-carrinho {
+          width: 100%;
+        }
+        .carrinho-box {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="venda-wrapper">
+      <!-- ═══ COLUNA ESQUERDA ═══ -->
+      <div class="col-produtos">
+        <h1 class="page-title">Nova Venda</h1>
+        <p class="page-subtitle">Selecione os produtos e finalize</p>
+
+        <div class="search-wrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            class="search-input"
+            type="text"
+            id="inputBusca"
+            placeholder="Buscar produto..."
+          />
         </div>
+
+        <div class="produtos-grid" id="gridProdutos">
+          <!-- skeletons enquanto carrega -->
+          <div class="skeleton-card">
+            <div
+              class="skeleton"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 10px;
+                flex-shrink: 0;
+              "
+            ></div>
+            <div style="flex: 1">
+              <div
+                class="skeleton"
+                style="height: 14px; width: 70%; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton" style="height: 12px; width: 40%"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div
+              class="skeleton"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 10px;
+                flex-shrink: 0;
+              "
+            ></div>
+            <div style="flex: 1">
+              <div
+                class="skeleton"
+                style="height: 14px; width: 70%; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton" style="height: 12px; width: 40%"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div
+              class="skeleton"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 10px;
+                flex-shrink: 0;
+              "
+            ></div>
+            <div style="flex: 1">
+              <div
+                class="skeleton"
+                style="height: 14px; width: 70%; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton" style="height: 12px; width: 40%"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div
+              class="skeleton"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 10px;
+                flex-shrink: 0;
+              "
+            ></div>
+            <div style="flex: 1">
+              <div
+                class="skeleton"
+                style="height: 14px; width: 70%; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton" style="height: 12px; width: 40%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ COLUNA DIREITA — CARRINHO ═══ -->
+      <div class="col-carrinho">
+        <div class="carrinho-box">
+          <div class="carrinho-titulo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="8" cy="21" r="1" />
+              <circle cx="19" cy="21" r="1" />
+              <path
+                d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+              />
+            </svg>
+            Carrinho
+          </div>
+
+          <!-- itens -->
+          <div id="carrinhoItems">
+            <div class="carrinho-vazio" id="carrinhoVazio">
+              Clique em um produto para adicionar
+            </div>
+          </div>
+
+          <!-- total -->
+          <div class="carrinho-total">
+            <span>Total</span>
+            <span class="total-valor" id="totalValor">R$ 0,00</span>
+          </div>
+
+          <!-- forma de pagamento -->
+          <div class="campo-grupo">
+            <div class="campo-label">
+              Forma de Pagamento <span class="req">*</span>
+            </div>
+            <select class="campo-select" id="formaPagamento">
+              <option value="">Selecione</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="pix">PIX</option>
+              <option value="cartao_debito">Cartão de Débito</option>
+              <option value="cartao_credito">Cartão de Crédito</option>
+              <option value="transferencia">Transferência</option>
+            </select>
+          </div>
+
+          <!-- cliente -->
+          <div class="campo-grupo">
+            <div class="campo-label">Cliente (opcional)</div>
+            <input
+              class="campo-input"
+              type="text"
+              id="nomeCliente"
+              placeholder="Nome do cliente"
+            />
+          </div>
+
+          <!-- observação -->
+          <div class="campo-grupo">
+            <div class="campo-label">Observação</div>
+            <textarea
+              class="campo-textarea"
+              id="observacao"
+              placeholder="Observações..."
+            ></textarea>
+          </div>
+
+          <!-- data da venda -->
+          <div class="campo-grupo">
+            <div class="campo-label">Data da Venda</div>
+            <input
+              class="campo-input"
+              type="date"
+              id="dataVenda"
+              value="<?= new Date().toISOString().split('T')[0] ?>"
+            />
+          </div>
+
+          <button
+            class="btn-finalizar"
+            id="btnFinalizar"
+            onclick="finalizarVenda()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            Finalizar Venda
+          </button>
+        </div>
+      </div>
     </div>
+  </body>
+</html>
