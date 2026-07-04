@@ -1283,6 +1283,25 @@
       const WPP_NUM = "5551986117103";
       const LOJA_NOME = "Leal Cosméticos";
 
+      // ── TEXTO HERO ──
+      const textoHero = "✨ Perfume é mais que aroma, é identidade.";
+      const textoEl = document.getElementById("textoExemplo");
+
+      if (textoEl) {
+        let pos = 0;
+
+        function digitarTextoHero() {
+          textoEl.textContent = textoHero.slice(0, pos);
+          pos++;
+
+          if (pos <= textoHero.length) {
+            setTimeout(digitarTextoHero, 45);
+          }
+        }
+
+        digitarTextoHero();
+      }
+
       // ── CURSOR ──
       if (!isMobile) {
         const cur = document.getElementById("cursor");
@@ -1310,32 +1329,20 @@
 
           requestAnimationFrame(animCursor);
         })();
-
-        document.querySelectorAll("button, a, .card, .chip").forEach((el) => {
-          el.addEventListener("mouseenter", () => {
-            cur.style.transform = "translate(-50%,-50%) scale(2.5)";
-            ring.style.transform = "translate(-50%,-50%) scale(1.5)";
-            ring.style.opacity = ".25";
-          });
-
-          el.addEventListener("mouseleave", () => {
-            cur.style.transform = "translate(-50%,-50%) scale(1)";
-            ring.style.transform = "translate(-50%,-50%) scale(1)";
-            ring.style.opacity = ".5";
-          });
-        });
       }
 
       // ── PARTÍCULAS HERO ──
       const hero = document.getElementById("hero");
-      /*const particleCount = isMobile ? 6 : 18;*/
       const particleCount = isMobile ? 4 : 18;
 
       for (let i = 0; i < particleCount; i++) {
         const p = document.createElement("div");
         p.className = "hero-particle";
+
         const s = 4 + Math.random() * 20;
+
         p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;animation-duration:${8 + Math.random() * 14}s;animation-delay:${Math.random() * 10}s;opacity:${0.04 + Math.random() * 0.1}`;
+
         hero.appendChild(p);
       }
 
@@ -1350,35 +1357,89 @@
         "✦ Promoções",
         "✦ Produtos Premium",
       ];
+
       const stripEl = document.getElementById("strip");
+
       const stripHTML = stripWords
         .map(
           (w) =>
             `<span class="strip-item">${w}<span class="strip-dot"></span></span>`,
         )
         .join("");
-      stripEl.innerHTML = stripHTML + stripHTML; // duplica para loop infinito
+
+      stripEl.innerHTML = stripHTML + stripHTML;
 
       // ── ESTADO ──
-      let todos = [],
-        filtrados = [],
-        carrinho = [],
-        buscaAtual = "",
-        filtroAtual = "todos";
+      let todos = [];
+      let filtrados = [];
+      let carrinho = [];
+      let buscaAtual = "";
+      let filtroAtual = "todos";
+
+      function garantirCarrinho() {
+        if (!Array.isArray(carrinho)) {
+          carrinho = [];
+        }
+
+        return carrinho;
+      }
+
+      function normalizarNumero(valor) {
+        if (valor === null || valor === undefined || valor === "") return 0;
+
+        if (typeof valor === "string") {
+          valor = valor.replace(",", ".");
+        }
+
+        return Number(valor) || 0;
+      }
+
+      function formatarPreco(valor) {
+        return normalizarNumero(valor).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+      }
+
+      function temPromocaoProduto(p) {
+        const precoNormal = normalizarNumero(p.preco_venda);
+        const precoPromo = normalizarNumero(p.preco_promocional);
+
+        const promocaoAtiva =
+          p.promocao_ativa === true ||
+          p.promocao_ativa === "true" ||
+          p.promocao_ativa === 1 ||
+          p.promocao_ativa === "1";
+
+        return promocaoAtiva && precoPromo > 0 && precoPromo < precoNormal;
+      }
+
+      function getPrecoFinal(p) {
+        return temPromocaoProduto(p)
+          ? normalizarNumero(p.preco_promocional)
+          : normalizarNumero(p.preco_venda);
+      }
 
       async function carregar() {
         try {
           const r = await fetch("/catalogo/produtos");
-          if (!r.ok) throw new Error();
+
+          if (!r.ok) {
+            throw new Error("Erro ao carregar produtos do catálogo");
+          }
+
           todos = await r.json();
-          console.log("Produto catálogo teste:", todos[0]);
+
           preencherFiltros();
           aplicarFiltros();
         } catch (e) {
+          console.error("Erro ao carregar catálogo:", e);
+
           document.getElementById("grid").innerHTML =
             `<div class="empty"><div class="empty-icon">😕</div><p>Não foi possível carregar os produtos.</p></div>`;
         }
       }
+
       function preencherFiltros() {
         const marcas = [
           ...new Set(todos.map((p) => p.marca).filter(Boolean)),
@@ -1387,14 +1448,14 @@
         const container = document.getElementById("filtros");
 
         container.innerHTML = `
-    <button class="chip chip-filtro ativo" onclick="filtrarCatalogo('todos', this)">
-      <span>Todos</span>
-    </button>
+          <button class="chip chip-filtro ativo" onclick="filtrarCatalogo('todos', this)">
+            <span>Todos</span>
+          </button>
 
-    <button class="chip chip-filtro" onclick="filtrarCatalogo('promocoes', this)">
-      <span>🔥 Promoções</span>
-    </button>
-  `;
+          <button class="chip chip-filtro" onclick="filtrarCatalogo('promocoes', this)">
+            <span>🔥 Promoções</span>
+          </button>
+        `;
 
         marcas.forEach((m) => {
           const btn = document.createElement("button");
@@ -1412,22 +1473,27 @@
           .querySelectorAll(".chip-filtro")
           .forEach((c) => c.classList.remove("ativo"));
 
-        el.classList.add("ativo");
+        if (el) {
+          el.classList.add("ativo");
+        }
 
         aplicarFiltros();
       }
 
       function buscar(q) {
-        buscaAtual = q.toLowerCase().trim();
+        buscaAtual = (q || "").toLowerCase().trim();
         aplicarFiltros();
       }
 
       function aplicarFiltros() {
         filtrados = todos.filter((p) => {
+          const nome = (p.nome || "").toLowerCase();
+          const marca = (p.marca || "").toLowerCase();
+
           const okBusca =
             !buscaAtual ||
-            (p.nome || "").toLowerCase().includes(buscaAtual) ||
-            (p.marca || "").toLowerCase().includes(buscaAtual);
+            nome.includes(buscaAtual) ||
+            marca.includes(buscaAtual);
 
           let okFiltro = true;
 
@@ -1445,31 +1511,7 @@
 
         renderGrid();
       }
-      function formatarPreco(valor) {
-        return Number(valor || 0).toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        });
-      }
 
-      function temPromocaoProduto(p) {
-        const precoNormal = Number(p.preco_venda || 0);
-        const precoPromo = Number(p.preco_promocional || 0);
-
-        const promocaoAtiva =
-          p.promocao_ativa === true ||
-          p.promocao_ativa === "true" ||
-          p.promocao_ativa === 1 ||
-          p.promocao_ativa === "1";
-
-        return promocaoAtiva && precoPromo > 0 && precoPromo < precoNormal;
-      }
-
-      function getPrecoFinal(p) {
-        return temPromocaoProduto(p)
-          ? Number(p.preco_promocional || 0)
-          : Number(p.preco_venda || 0);
-      }
       function renderGrid() {
         const grid = document.getElementById("grid");
 
@@ -1478,171 +1520,246 @@
           return;
         }
 
+        garantirCarrinho();
+
         grid.innerHTML = filtrados
           .map((p, i) => {
-            const precoNormal = Number(p.preco_venda || 0);
-            const precoPromo = Number(p.preco_promocional || 0);
+            const precoNormal = normalizarNumero(p.preco_venda);
+            const precoPromo = normalizarNumero(p.preco_promocional);
             const temPromo = temPromocaoProduto(p);
 
-            const esgot = Number(p.quantidade || 0) <= 0;
-            const noCart = carrinho.some((c) => c.produto.id === p.id);
+            const esgot = normalizarNumero(p.quantidade) <= 0;
+
+            const noCart = carrinho.some(
+              (c) => Number(c.produto.id) === Number(p.id),
+            );
 
             const img = p.imagemproduto
-              ? `<img class="card-img" src="${p.imagemproduto}" alt="${p.nome}" loading="lazy" decoding="async"/>`
+              ? `<img class="card-img" src="${p.imagemproduto}" alt="${p.nome || ""}" loading="lazy" decoding="async"/>`
               : `<div class="card-placeholder">💄</div>`;
 
             const isNovo = i < 2;
 
             const precoHtml = temPromo
               ? `
-          <div class="card-preco-wrap">
-            <span class="card-preco-antigo">De ${formatarPreco(precoNormal)}</span>
-            <span class="card-preco-promo">Por ${formatarPreco(precoPromo)}</span>
-          </div>
-        `
+                <div class="card-preco-wrap">
+                  <span class="card-preco-antigo">De ${formatarPreco(precoNormal)}</span>
+                  <span class="card-preco-promo">Por ${formatarPreco(precoPromo)}</span>
+                </div>
+              `
               : `
-          <div class="card-preco-wrap">
-            <span class="card-preco-normal">${formatarPreco(precoNormal)}</span>
-          </div>
-        `;
+                <div class="card-preco-wrap">
+                  <span class="card-preco-normal">${formatarPreco(precoNormal)}</span>
+                </div>
+              `;
 
             return `
-        <div class="card" style="animation-delay:${i * 0.06}s">
-          <div class="card-img-wrap">
-            ${img}
-            <div class="card-overlay">
-              <span class="card-overlay-text">Ver produto</span>
-            </div>
+              <div class="card" style="animation-delay:${i * 0.06}s">
+                <div class="card-img-wrap">
+                  ${img}
 
-            ${esgot ? '<span class="badge-esgotado">Esgotado</span>' : ""}
-            ${temPromo && !esgot ? '<span class="badge-promo">Promoção</span>' : ""}
-            ${isNovo && !esgot && !temPromo ? '<span class="badge-novo">Novo</span>' : ""}
-          </div>
+                  <div class="card-overlay">
+                    <span class="card-overlay-text">Ver produto</span>
+                  </div>
 
-          <div class="card-body">
-            <div class="card-marca">${p.marca || ""}</div>
-            <div class="card-nome">${p.nome || ""}</div>
-            ${precoHtml}
-          </div>
+                  ${esgot ? '<span class="badge-esgotado">Esgotado</span>' : ""}
+                  ${temPromo && !esgot ? '<span class="badge-promo">Promoção</span>' : ""}
+                  ${isNovo && !esgot && !temPromo ? '<span class="badge-novo">Novo</span>' : ""}
+                </div>
 
-          <div class="card-footer">
-            <button
-              class="btn-add ${noCart ? "adicionado" : ""}"
-              onclick="toggleCarrinho(${p.id})"
-              ${esgot ? "disabled" : ""}
-            >
-              <span>
-                ${esgot ? "😕 Esgotado" : noCart ? "✓ Adicionado" : "+ Adicionar ao pedido"}
-              </span>
-            </button>
-          </div>
-        </div>`;
+                <div class="card-body">
+                  <div class="card-marca">${p.marca || ""}</div>
+                  <div class="card-nome">${p.nome || ""}</div>
+                  ${precoHtml}
+                </div>
+
+                <div class="card-footer">
+                  <button
+                    class="btn-add ${noCart ? "adicionado" : ""}"
+                    onclick="toggleCarrinho(${p.id})"
+                    ${esgot ? "disabled" : ""}
+                  >
+                    <span>
+                      ${esgot ? "😕 Esgotado" : noCart ? "✓ Adicionado" : "+ Adicionar ao pedido"}
+                    </span>
+                  </button>
+                </div>
+              </div>`;
           })
           .join("");
       }
 
       function toggleCarrinho(id) {
-        const produto = todos.find((p) => p.id === id);
+        garantirCarrinho();
+
+        const produto = todos.find((p) => Number(p.id) === Number(id));
         if (!produto) return;
-        const idx = carrinho.findIndex((c) => c.produto.id === id);
+
+        const idx = carrinho.findIndex(
+          (c) => Number(c.produto.id) === Number(id),
+        );
+
         const isNew = idx < 0;
-        if (isNew) carrinho.push({ produto, qtd: 1 });
-        else carrinho.splice(idx, 1);
+
+        if (isNew) {
+          carrinho.push({ produto, qtd: 1 });
+        } else {
+          carrinho.splice(idx, 1);
+        }
+
         atualizarFAB();
         renderGrid();
         renderDrawer();
-        if (isNew && carrinho.length === 1) abrirDrawer();
+
+        if (isNew && carrinho.length === 1) {
+          abrirDrawer();
+        }
       }
 
       function alterarQtd(id, d) {
-        const idx = carrinho.findIndex((c) => c.produto.id === id);
+        garantirCarrinho();
+
+        const idx = carrinho.findIndex(
+          (c) => Number(c.produto.id) === Number(id),
+        );
+
         if (idx < 0) return;
-        carrinho[idx].qtd += d;
-        if (carrinho[idx].qtd <= 0) carrinho.splice(idx, 1);
+
+        carrinho[idx].qtd = normalizarNumero(carrinho[idx].qtd) + d;
+
+        if (carrinho[idx].qtd <= 0) {
+          carrinho.splice(idx, 1);
+        }
+
         atualizarFAB();
         renderDrawer();
         renderGrid();
       }
 
       function atualizarFAB() {
+        garantirCarrinho();
+
         const b = document.getElementById("fabBadge");
-        const t = carrinho.reduce((s, c) => s + c.qtd, 0);
-        b.textContent = t;
-        b.style.display = t > 0 ? "flex" : "none";
+        if (!b) return;
+
+        const totalItens = carrinho.reduce(
+          (s, c) => s + normalizarNumero(c.qtd),
+          0,
+        );
+
+        b.textContent = totalItens;
+        b.style.display = totalItens > 0 ? "flex" : "none";
       }
 
       function renderDrawer() {
+        garantirCarrinho();
+
         const cont = document.getElementById("drawerItems");
         const tv = document.getElementById("drawerTotal");
         const btn = document.getElementById("btnWpp");
+
+        if (!cont || !tv || !btn) return;
+
         if (!carrinho.length) {
           cont.innerHTML =
             '<div class="drawer-empty">Nenhum item ainda.<br>Adicione produtos ao lado! 💜</div>';
+
           tv.textContent = "R$ 0,00";
           btn.disabled = true;
           return;
         }
+
         let total = 0;
-        cont.innerHTML = carrinho.m
+
+        cont.innerHTML = carrinho
           .map((item) => {
-            const pr = getPrecoFinal(item.produto);
-            const sub = pr * item.qtd;
+            const produto = item.produto;
+            const qtd = normalizarNumero(item.qtd) || 1;
+
+            const precoFinal = getPrecoFinal(produto);
+            const sub = precoFinal * qtd;
+
             total += sub;
 
-            const img = item.produto.imagemproduto
-              ? `<img class="ditem-img" src="${item.produto.imagemproduto}" alt="${item.produto.nome}"/>`
+            const img = produto.imagemproduto
+              ? `<img class="ditem-img" src="${produto.imagemproduto}" alt="${produto.nome || ""}"/>`
               : `<div class="ditem-ph">💄</div>`;
 
             return `
-    <div class="ditem">
-      ${img}
-      <div class="ditem-info">
-        <div class="ditem-nome">${item.produto.nome}</div>
-        <div class="ditem-preco">${formatarPreco(sub)}</div>
-      </div>
-      <div class="ditem-qtd">
-        <button onclick="alterarQtd(${item.produto.id}, -1)">−</button>
-        <span>${item.qtd}</span>
-        <button onclick="alterarQtd(${item.produto.id}, 1)">+</button>
-      </div>
-    </div>`;
+              <div class="ditem">
+                ${img}
+
+                <div class="ditem-info">
+                  <div class="ditem-nome">${produto.nome || ""}</div>
+                  <div class="ditem-preco">${formatarPreco(sub)}</div>
+                </div>
+
+                <div class="ditem-qtd">
+                  <button onclick="alterarQtd(${produto.id}, -1)">−</button>
+                  <span>${qtd}</span>
+                  <button onclick="alterarQtd(${produto.id}, 1)">+</button>
+                </div>
+              </div>`;
           })
           .join("");
+
         tv.textContent = formatarPreco(total);
         btn.disabled = false;
       }
 
       function abrirDrawer() {
+        garantirCarrinho();
+
         renderDrawer();
-        document.getElementById("drawer").classList.add("aberto");
-        document.getElementById("overlay").classList.add("aberto");
+
+        const drawer = document.getElementById("drawer");
+        const overlay = document.getElementById("overlay");
+
+        if (drawer) drawer.classList.add("aberto");
+        if (overlay) overlay.classList.add("aberto");
+
         document.body.style.overflow = "hidden";
       }
 
       function fecharDrawer() {
-        document.getElementById("drawer").classList.remove("aberto");
-        document.getElementById("overlay").classList.remove("aberto");
+        const drawer = document.getElementById("drawer");
+        const overlay = document.getElementById("overlay");
+
+        if (drawer) drawer.classList.remove("aberto");
+        if (overlay) overlay.classList.remove("aberto");
+
         document.body.style.overflow = "";
       }
 
       function enviarWpp() {
+        garantirCarrinho();
+
         if (!carrinho.length) return;
+
         const obs = document.getElementById("obs").value.trim();
+
         const total = carrinho.reduce(
-          (s, c) => s + getPrecoFinal(c.produto) * c.qtd,
+          (s, c) =>
+            s + getPrecoFinal(c.produto) * (normalizarNumero(c.qtd) || 1),
           0,
         );
+
         let msg = `Olá! Gostaria de fazer um pedido no *${LOJA_NOME}* 💜\n\n*Itens do pedido:*\n`;
-        b;
+
         carrinho.forEach((item) => {
-          const precoFinal = getPrecoFinal(item.produto);
-          const sub = precoFinal * item.qtd;
+          const qtd = normalizarNumero(item.qtd) || 1;
+          const sub = getPrecoFinal(item.produto) * qtd;
           const temPromo = temPromocaoProduto(item.produto);
 
-          msg += `• ${item.produto.nome} x${item.qtd} — ${formatarPreco(sub)}${temPromo ? " 🔥 promo" : ""}\n`;
+          msg += `• ${item.produto.nome} x${qtd} — ${formatarPreco(sub)}${temPromo ? " 🔥 promo" : ""}\n`;
         });
+
         msg += `\n*Total: ${formatarPreco(total)}*`;
-        if (obs) msg += `\n\n*Observações:* ${obs}`;
+
+        if (obs) {
+          msg += `\n\n*Observações:* ${obs}`;
+        }
+
         window.open(
           `https://wa.me/${WPP_NUM}?text=${encodeURIComponent(msg)}`,
           "_blank",
@@ -1651,7 +1768,5 @@
 
       carregar();
     </script>
-
-    <script src="../js/script.js"></script>
   </body>
 </html>
