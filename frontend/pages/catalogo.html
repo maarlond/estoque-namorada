@@ -1168,6 +1168,251 @@
           font-size: 0.78rem;
         }
       }
+
+      /* ─────────────────────────────
+         MODAL DE PRODUTO
+      ───────────────────────────── */
+      .produto-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 950;
+        background: rgba(26, 13, 20, 0.58);
+        backdrop-filter: blur(5px);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .produto-modal-overlay.aberto {
+        display: flex;
+      }
+
+      .produto-modal {
+        width: 100%;
+        max-width: 860px;
+        max-height: 92vh;
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        position: relative;
+        box-shadow: 0 30px 90px rgba(26, 13, 20, 0.32);
+        animation: produtoModalIn 0.25s ease;
+      }
+
+      @keyframes produtoModalIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .produto-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(237, 221, 230, 0.9);
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--rose2);
+        font-size: 1rem;
+        font-weight: 900;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+
+      .produto-modal-close:hover {
+        transform: scale(1.06);
+        background: #fee2e2;
+      }
+
+      .produto-modal-img-wrap {
+        min-height: 430px;
+        background: linear-gradient(135deg, #f9e8ef, #eddde6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .produto-modal-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .produto-modal-placeholder {
+        font-size: 5rem;
+      }
+
+      .produto-modal-info {
+        padding: 42px 34px 34px;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .produto-modal-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .produto-modal-badge {
+        display: inline-flex;
+        align-items: center;
+        width: max-content;
+        border-radius: 999px;
+        padding: 5px 11px;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .produto-modal-badge.promo {
+        background: #e11d48;
+        color: #fff;
+      }
+
+      .produto-modal-badge.esgotado {
+        background: #1a0d14;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .produto-modal-marca {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--rose);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        margin-bottom: 8px;
+      }
+
+      .produto-modal-nome {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1.15;
+        margin-bottom: 14px;
+      }
+
+      .produto-modal-preco {
+        margin-bottom: 16px;
+      }
+
+      .produto-modal-preco .preco-antigo {
+        display: block;
+        color: var(--muted);
+        text-decoration: line-through;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .produto-modal-preco .preco-promo {
+        display: block;
+        color: #e11d48;
+        font-size: 1.9rem;
+        font-weight: 900;
+        line-height: 1.08;
+      }
+
+      .produto-modal-preco .preco-normal {
+        display: block;
+        color: var(--rose);
+        font-size: 1.9rem;
+        font-weight: 900;
+        line-height: 1.08;
+      }
+
+      .produto-modal-desc {
+        color: var(--mid);
+        line-height: 1.6;
+        font-size: 0.96rem;
+        margin-bottom: 18px;
+      }
+
+      .produto-modal-estoque {
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: var(--mid);
+        line-height: 1.6;
+        margin-bottom: 22px;
+      }
+
+      .produto-modal-add {
+        margin-top: auto;
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(135deg, var(--rose), var(--rose2));
+        color: #fff;
+        font-size: 0.98rem;
+        font-weight: 800;
+        font-family: "Outfit", sans-serif;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          opacity 0.2s;
+      }
+
+      .produto-modal-add:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px rgba(196, 81, 122, 0.28);
+      }
+
+      .produto-modal-add.adicionado {
+        background: #10b981;
+      }
+
+      .produto-modal-add:disabled {
+        opacity: 0.45;
+      }
+
+      .card {
+        cursor: none;
+      }
+
+      @media (max-width: 768px) {
+        .produto-modal {
+          max-width: 430px;
+          grid-template-columns: 1fr;
+          overflow-y: auto;
+        }
+
+        .produto-modal-img-wrap {
+          min-height: 260px;
+        }
+
+        .produto-modal-info {
+          padding: 26px 22px 24px;
+        }
+
+        .produto-modal-nome {
+          font-size: 1.32rem;
+        }
+
+        .produto-modal-preco .preco-promo,
+        .produto-modal-preco .preco-normal {
+          font-size: 1.55rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1275,6 +1520,43 @@
           </svg>
           Enviar pedido pelo WhatsApp
         </button>
+      </div>
+    </div>
+
+    <!-- MODAL PRODUTO -->
+    <div
+      class="produto-modal-overlay"
+      id="produtoModalOverlay"
+      onclick="fecharModalProdutoCatalogo()"
+    >
+      <div class="produto-modal" onclick="event.stopPropagation()">
+        <button
+          class="produto-modal-close"
+          type="button"
+          onclick="fecharModalProdutoCatalogo()"
+          aria-label="Fechar detalhes do produto"
+        >
+          ✕
+        </button>
+
+        <div class="produto-modal-img-wrap" id="produtoModalImg"></div>
+
+        <div class="produto-modal-info">
+          <div class="produto-modal-badges" id="produtoModalBadges"></div>
+          <div class="produto-modal-marca" id="produtoModalMarca"></div>
+          <h3 class="produto-modal-nome" id="produtoModalNome"></h3>
+          <div class="produto-modal-preco" id="produtoModalPreco"></div>
+          <p class="produto-modal-desc" id="produtoModalDesc"></p>
+          <div class="produto-modal-estoque" id="produtoModalEstoque"></div>
+
+          <button
+            class="produto-modal-add"
+            id="produtoModalBtnAdd"
+            type="button"
+          >
+            + Adicionar ao pedido
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1554,7 +1836,7 @@
               `;
 
             return `
-              <div class="card" style="animation-delay:${i * 0.06}s">
+              <div class="card" style="animation-delay:${i * 0.06}s" onclick="abrirModalProdutoCatalogo(${p.id})">
                 <div class="card-img-wrap">
                   ${img}
 
@@ -1576,7 +1858,7 @@
                 <div class="card-footer">
                   <button
                     class="btn-add ${noCart ? "adicionado" : ""}"
-                    onclick="toggleCarrinho(${p.id})"
+                    onclick="event.stopPropagation(); toggleCarrinho(${p.id})"
                     ${esgot ? "disabled" : ""}
                   >
                     <span>
@@ -1587,6 +1869,103 @@
               </div>`;
           })
           .join("");
+      }
+
+      function abrirModalProdutoCatalogo(id) {
+        const produto = todos.find((p) => Number(p.id) === Number(id));
+        if (!produto) return;
+
+        garantirCarrinho();
+
+        const overlay = document.getElementById("produtoModalOverlay");
+        const imgBox = document.getElementById("produtoModalImg");
+        const badges = document.getElementById("produtoModalBadges");
+        const marca = document.getElementById("produtoModalMarca");
+        const nome = document.getElementById("produtoModalNome");
+        const preco = document.getElementById("produtoModalPreco");
+        const desc = document.getElementById("produtoModalDesc");
+        const estoque = document.getElementById("produtoModalEstoque");
+        const btnAdd = document.getElementById("produtoModalBtnAdd");
+
+        if (
+          !overlay ||
+          !imgBox ||
+          !badges ||
+          !marca ||
+          !nome ||
+          !preco ||
+          !desc ||
+          !estoque ||
+          !btnAdd
+        ) {
+          return;
+        }
+
+        const precoNormal = normalizarNumero(produto.preco_venda);
+        const precoPromo = normalizarNumero(produto.preco_promocional);
+        const temPromo = temPromocaoProduto(produto);
+        const qtd = normalizarNumero(produto.quantidade);
+        const esgotado = qtd <= 0;
+
+        const estaNoCarrinho = carrinho.some(
+          (c) => Number(c.produto.id) === Number(produto.id),
+        );
+
+        imgBox.innerHTML = produto.imagemproduto
+          ? `<img src="${produto.imagemproduto}" alt="${produto.nome || ""}" />`
+          : `<div class="produto-modal-placeholder">💄</div>`;
+
+        badges.innerHTML = `
+          ${temPromo && !esgotado ? '<span class="produto-modal-badge promo">Promoção</span>' : ""}
+          ${esgotado ? '<span class="produto-modal-badge esgotado">Esgotado</span>' : ""}
+        `;
+
+        marca.textContent = produto.marca || "";
+        nome.textContent = produto.nome || "";
+
+        preco.innerHTML = temPromo
+          ? `
+            <span class="preco-antigo">De ${formatarPreco(precoNormal)}</span>
+            <span class="preco-promo">Por ${formatarPreco(precoPromo)}</span>
+          `
+          : `
+            <span class="preco-normal">${formatarPreco(precoNormal)}</span>
+          `;
+
+        desc.textContent = temPromo
+          ? "Produto em promoção por tempo limitado."
+          : "Produto disponível no catálogo Leal Cosméticos.";
+
+        estoque.textContent =
+          produto.descricao && produto.descricao.trim()
+            ? produto.descricao
+            : "Sem descrição cadastrada para este produto.";
+
+        btnAdd.disabled = esgotado;
+        btnAdd.classList.toggle("adicionado", estaNoCarrinho);
+        btnAdd.textContent = esgotado
+          ? "Produto esgotado"
+          : estaNoCarrinho
+            ? "✓ Remover do pedido"
+            : "+ Adicionar ao pedido";
+
+        btnAdd.onclick = function () {
+          fecharModalProdutoCatalogo();
+          toggleCarrinho(produto.id);
+        };
+
+        overlay.classList.add("aberto");
+        document.body.style.overflow = "hidden";
+      }
+
+      function fecharModalProdutoCatalogo() {
+        const overlay = document.getElementById("produtoModalOverlay");
+        if (overlay) overlay.classList.remove("aberto");
+
+        const drawer = document.getElementById("drawer");
+        const drawerAberto = drawer && drawer.classList.contains("aberto");
+
+        document.body.style.overflow = drawerAberto ? "hidden" : "";
       }
 
       function toggleCarrinho(id) {
@@ -1765,6 +2144,12 @@
           "_blank",
         );
       }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          fecharModalProdutoCatalogo();
+        }
+      });
 
       carregar();
     </script>

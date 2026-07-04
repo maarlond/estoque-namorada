@@ -30,6 +30,7 @@ app.get("/catalogo/produtos", async (req, res) => {
         codigo,
         marca,
         quantidade,
+        descricao,
         preco_venda,
         preco_promocional,
         promocao_ativa,
