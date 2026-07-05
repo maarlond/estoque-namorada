@@ -1566,23 +1566,8 @@
       const LOJA_NOME = "Leal Cosméticos";
 
       // ── TEXTO HERO ──
-      const textoHero = "✨ Perfume é mais que aroma, é identidade.";
-      const textoEl = document.getElementById("textoExemplo");
-
-      if (textoEl) {
-        let pos = 0;
-
-        function digitarTextoHero() {
-          textoEl.textContent = textoHero.slice(0, pos);
-          pos++;
-
-          if (pos <= textoHero.length) {
-            setTimeout(digitarTextoHero, 45);
-          }
-        }
-
-        digitarTextoHero();
-      }
+      // O texto dinâmico do hero vem do arquivo externo ../js/script.js.
+      // Mantemos o bloco vazio aqui para evitar duplicidade de animação.
 
       // ── CURSOR ──
       if (!isMobile) {
@@ -2153,5 +2138,6 @@
 
       carregar();
     </script>
+    <script src="../js/script.js"></script>
   </body>
 </html>
