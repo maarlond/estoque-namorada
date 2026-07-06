@@ -34,7 +34,8 @@ app.get("/catalogo/produtos", async (req, res) => {
         preco_venda,
         preco_promocional,
         promocao_ativa,
-        imagemproduto
+        imagemproduto,
+        status_entrega
       FROM produtos
       WHERE quantidade > 0
       ORDER BY id DESC

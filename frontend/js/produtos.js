@@ -137,6 +137,8 @@ async function adicionarProduto() {
 
   const promocao_ativa = promocaoAtivaInput?.value === "true";
 
+  const status_entrega =
+    document.getElementById("status_entrega")?.value || "pronta_entrega";
   const preco_promocional =
     precoPromocionalInput && precoPromocionalInput.value
       ? parseFloat(precoPromocionalInput.value)
@@ -165,7 +167,6 @@ async function adicionarProduto() {
   const imagemProduto = document.getElementById("imagemProduto");
 
   const formData = new FormData();
-
   formData.append("nome", nome);
   formData.append("codigo", codigo);
   formData.append("marca", marca);
@@ -173,6 +174,7 @@ async function adicionarProduto() {
   formData.append("preco_custo", preco_custo);
   formData.append("preco_venda", preco_venda);
   formData.append("descricao", descricao);
+  formData.append("status_entrega", status_entrega);
 
   formData.append("promocao_ativa", promocao_ativa ? "true" : "false");
 
@@ -317,6 +319,9 @@ function limparFormulario() {
     document.getElementById("promocao_ativa").value = "false";
   }
 
+  if (document.getElementById("status_entrega")) {
+    document.getElementById("status_entrega").value = "pronta_entrega";
+  }
   produtoEditando = null;
 }
 function abrirModalProduto() {
@@ -328,7 +333,7 @@ function abrirModalProduto() {
 
   document.getElementById("preco_promocional").value = "";
   document.getElementById("promocao_ativa").value = "false";
-
+  document.getElementById("status_entrega").value = "pronta_entrega";
   modal.style.display = "flex";
 }
 
@@ -359,6 +364,11 @@ function editarProduto(produto) {
     document.getElementById("promocao_ativa").value = produto.promocao_ativa
       ? "true"
       : "false";
+  }
+
+  if (document.getElementById("status_entrega")) {
+    document.getElementById("status_entrega").value =
+      produto.status_entrega || "pronta_entrega";
   }
 
   produtoEditando = produto.id;

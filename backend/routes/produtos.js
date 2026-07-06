@@ -42,6 +42,7 @@ router.post(
         preco_custo,
         preco_venda,
         descricao,
+        status_entrega,
       } = req.body;
 
       const promocao_ativa =
@@ -86,9 +87,10 @@ router.post(
           descricao,
           imagemproduto,
           promocao_ativa,
-          preco_promocional
+          preco_promocional,
+          status_entrega
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
         [
           nome,
           codigo,
@@ -100,6 +102,7 @@ router.post(
           imagemProduto,
           promocao_ativa,
           preco_promocional,
+          status_entrega || "pronta_entrega",
         ],
       );
 
@@ -137,6 +140,7 @@ router.put(
         preco_custo,
         preco_venda,
         descricao,
+        status_entrega,
       } = req.body;
 
       const promocao_ativa =
@@ -179,7 +183,8 @@ router.put(
             preco_venda = $6,
             descricao = $7,
             promocao_ativa = $8,
-            preco_promocional = $9
+            preco_promocional = $9,
+            status_entrega = $10
       `;
 
       const params = [
@@ -192,13 +197,14 @@ router.put(
         descricao || null,
         promocao_ativa,
         preco_promocional,
+        status_entrega || "pronta_entrega",
       ];
 
       if (imagemProduto) {
-        query += `, imagemproduto = $10 WHERE id = $11`;
+        query += `, imagemproduto = $11 WHERE id = $12`;
         params.push(imagemProduto, id);
       } else {
-        query += ` WHERE id = $10`;
+        query += ` WHERE id = $11`;
         params.push(id);
       }
 
