@@ -1232,6 +1232,13 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+
+  /* Correção do conteúdo cortado no desktop */
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .produto-modal-badges {
@@ -1841,5 +1848,37 @@ body {
 
   .main {
     padding-bottom: 170px;
+  }
+}
+
+/* Modal um pouco menor no desktop */
+@media (min-width: 769px) {
+  .produto-modal {
+    max-width: 900px;
+    max-height: 86vh;
+  }
+
+  .produto-modal-img-wrap {
+    min-height: 440px;
+  }
+
+  .produto-modal-info {
+    max-height: 86vh;
+    padding: 32px 28px 28px;
+  }
+
+  .produto-modal-nome {
+    font-size: 1.5rem;
+  }
+
+  .produto-modal-preco .preco-promo,
+  .produto-modal-preco .preco-normal {
+    font-size: 1.9rem;
+  }
+
+  .produto-modal-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 16px 0;
   }
 }

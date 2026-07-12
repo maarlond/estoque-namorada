@@ -613,7 +613,6 @@ function abrirModalProdutoCatalogo(id) {
   desc.innerHTML = descricao;
 
   estoque.innerHTML = `
-  <strong>Disponibilidade:</strong> ${produto.quantidade} unidade(s)<br>
   <strong>Entrega:</strong> ${statusEntrega}
 `;
   btnAdd.disabled = esgotado;
